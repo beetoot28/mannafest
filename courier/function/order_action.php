@@ -6,10 +6,11 @@ include '../../connections/connect.php';
                             
                            echo  $trans_id = $_POST['trans_id'];
                             // $prod_id = $_POST['prod_id'];
-           
-                                    $query = "UPDATE `transaction` SET status='ready'
+                                    date_default_timezone_set('Asia/Manila');
+                                     $datenow = date('Y-m-d H:i:s');
+                                    $query = "UPDATE `transaction` SET status='ready',date_delivered='$datenow'
                                     WHERE tid='$trans_id'";         
-                                $results = mysqli_query($con, $query);
+                                   $results = mysqli_query($con, $query);
 
                                    
                                     if ($results) {
@@ -26,10 +27,13 @@ include '../../connections/connect.php';
 
                                 if (isset($_POST['deliver'])) {
                             
-                                    echo  $trans_id = $_POST['trans_id'];
+                                      $trans_id = $_POST['trans_id'];
                                      // $prod_id = $_POST['prod_id'];
-                    
-                                        $query = "UPDATE `transaction` SET status='otw' WHERE tid='$trans_id'";         
+                                     date_default_timezone_set('Asia/Manila');
+                                     echo $datenow = date('Y-m-d H:i:s');
+                               
+                                    
+                                        $query = "UPDATE `transaction` SET status='otw',date_delivered='$datenow' WHERE tid='$trans_id'";         
                                          $results = mysqli_query($con, $query);
          
                                          $listOrder = mysqli_query($con, "SELECT * from trans_record 
@@ -42,9 +46,9 @@ include '../../connections/connect.php';
                                             echo $stockAlert = $row['stockAlert'];
                                             echo $status ='ACTIVE';
                                             // select product quantity
-                                            $sql = mysqli_query($con, "SELECT * from product_quantity where prod_id='$prod_id'");  
-                                            $prod = mysqli_fetch_array($sql);
-                                            $prod_qty =  $prod['quantity'];
+                                            // $sql = mysqli_query($con, "SELECT * from product_quantity where prod_id='$prod_id'");  
+                                            // $prod = mysqli_fetch_array($sql);
+                                            // $prod_qty =  $prod['quantity'];
 
                                             $sql = mysqli_query($con, "SELECT * from production_log where prod_id='$prod_id' AND status='ACTIVE' ORDER BY `production_code` DESC LIMIT 1");  
                                             $log = mysqli_fetch_array($sql);

@@ -26,19 +26,19 @@ $prod_list .= '
 
 $sql = "SELECT * FROM category";
 $result = mysqli_query($con, $sql);
+$category_map = array();
 $category='';
 while($arr = mysqli_fetch_array($result))
 {
-$category .= '
-
-<option value="'.$arr["cat_id"].'">'.$arr["category_name"].'</option>';
+  $category_map[$arr["category_name"]] = $arr["cat_id"];
+  $category .= '<option value="'.$arr["cat_id"].'">'.$arr["category_name"].'</option>';
 }
 
 include "modal/product_modal.php";
 
 
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 <style>
 .table td {
     font-size: 18px;
@@ -237,6 +237,20 @@ $(document).ready(function() {
 
     }
 
+    updateListUpdate = function() {
+        var input = document.getElementById('fileUpdate');
+        var output = document.getElementById('fileListUpdate');
+
+
+        for (var i = 0; i < input.files.length; ++i) {
+            output.innerHTML +=
+                '<div class="card mb-1 " style="border-left:4px solid #5a7c7d"><div class="card-body">' +
+                input.files.item(i).name + '</div></div>';
+        }
+
+
+    }
+
 
     removeList = function() {
         var input = document.getElementById('file');
@@ -257,10 +271,11 @@ $(document).ready(function() {
         var data = $tr.children("td").map(function() {
             return $(this).text();
         }).get();
-
+        
+        $('#prod_id_update').val(data[0]);
         $('#edit_barcode').val(data[2]);
         $('#edit_name').val(data[3]);
-        $('#edit_cat').val(data[4]);
+        $('#edit_cat').val(data[4]).change();
         // Get the select element
         $('#prodUpdate').modal('show');
 

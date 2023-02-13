@@ -9,12 +9,12 @@ if(isset($_GET["search"]))
 {  
      $search = $_GET["search"];  
      $checked = filter_var($_GET['search']) ;
-    //  $char = preg_replace('#[^a-z]#i', '', $char);  
+     $char = preg_replace('#[^a-z]#i', '', $checked);  
      $query = "SELECT *
      FROM `product`
      LEFT JOIN photo ON product.prod_id = photo.prod_id
      LEFT JOIN category ON product.cat_id = category.cat_id
-     WHERE (name LIKE '%$search%' OR category_name LIKE '%$search%') AND (price IS NOT NULL AND cost IS NOT NULL) "; 
+     WHERE category_name LIKE '%$char%'"; 
 }  
 else  
 {  
@@ -27,9 +27,36 @@ $sorting_items = mysqli_query($con, $query);
 
 
 ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+.cardd {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-<div class="row mt-4">
+.card {
+    width: 100%;
+    height: 100%;
+
+}
+
+.circle {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+    .circle {
+        width: 100px;
+        height: 100px;
+    }
+}
+</style>
+
+<div class="row mt-3">
     <center>
         <div class="wrapper">
             <div id="search-container">
@@ -39,24 +66,24 @@ $sorting_items = mysqli_query($con, $query);
                 <a href='category.php'
                     class="button-value  <?php if ($checked == '') { echo 'active'; } else { echo ''; } ?>"
                     style='text-decoration:none;font-weight:bold;color:#FDC96F;'>All</a>
-                <a href='category.php?search=Breads' class="button-value
-                            <?php if ($checked == 'Breads') { echo 'active'; } else { echo ''; } ?>"
+                <a href='category.php?search=Bread' class="button-value
+                            <?php if ($checked == 'Bread') { echo 'active'; } else { echo ''; } ?>"
                     style='text-decoration:none;font-weight:bold;color:#FDC96F;'>
                     Breads
                 </a>
-                <a href='category.php?search=biscuits'
-                    class="button-value  <?php if ($checked == 'biscuits') { echo 'active'; } else { echo ''; } ?>"
+                <a href='category.php?search=Biscuit'
+                    class="button-value  <?php if ($checked == 'Biscuit') { echo 'active'; } else { echo ''; } ?>"
                     style='text-decoration:none;font-weight:bold;color:#FDC96F;'>
                     Biscuits
                 </a>
-              
-                <a href='category.php?search=Cakes'
-                    class="button-value  <?php if ($checked == 'Cakes') { echo 'active'; } else { echo ''; } ?>"
+
+                <a href='category.php?search=Cake'
+                    class="button-value  <?php if ($checked == 'Cake') { echo 'active'; } else { echo ''; } ?>"
                     style='text-decoration:none;font-weight:bold;color:#FDC96F;'>
                     Cakes
                 </a>
-                <a href='category.php?search=others'
-                    class="button-value   <?php if ($checked == 'others') { echo 'active'; } else { echo ''; } ?>"
+                <a href='category.php?search=Others'
+                    class="button-value   <?php if ($checked == 'Others') { echo 'active'; } else { echo ''; } ?>"
                     style='text-decoration:none;font-weight:bold;color:#FDC96F;'>
                     Others
                 </a>
@@ -97,13 +124,13 @@ $sorting_items = mysqli_query($con, $query);
                 <a href="product_details.php?prod=<?php echo $row['prod_id'] ?>" style="text-decoration: none"> <span
                         style="text-align: center;font-weight: bold"><?php echo $row['name'] ?></span> </a><br>
                 <span class="card-text" style="text-align: left;"><?php echo $row['description'] ?>
-          
-                    </span><br>
-                    <span class="text-secondary" style="font-size: 20px;font-weight: bolder;">₱
-                        <?php echo $row['price'] ?>
-                    </span> <br>
-                    <p></p>
-                    <?php 
+
+                </span><br>
+                <span class="text-secondary" style="font-size: 20px;font-weight: bolder;">₱
+                    <?php echo $row['price'] ?>
+                </span> <br>
+                <p></p>
+                <?php 
                     $prod_id = $row['prod_id'];
                     $query = "SELECT SUM(user_rating) as sum, COUNT(*) as count FROM review_table where prod_id='$prod_id '";
                     $sqlRes = $con->query($query);
@@ -199,16 +226,16 @@ $sorting_items = mysqli_query($con, $query);
 
     <?php
     
-}
-    
         }
-        else
-        {
-            echo '<h4 class="mb-3 text-center" style="font-weight: bolder;text-shadow: 2px 2px #a8b6c5;">Product not Found </h4>  ';
             
-        }
-   
-?>
+                }
+                else
+                {
+                    echo '<h4 class="mb-3 text-center" style="font-weight: bolder;text-shadow: 2px 2px #a8b6c5;">Product not Found </h4>  ';
+                    
+                }
+        
+        ?>
 
 
 </div>

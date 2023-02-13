@@ -6,7 +6,7 @@
             <th>Order Code</th>
             <th>Date</th>
             <th>Customer</th>
-            <th>Total Price</th>
+            <th>Total Amount</th>
             <th>Status</th>
             <th>Action</th>
 
@@ -16,15 +16,13 @@
     <tbody style='font-size:40px'>
         <?php while ($row = mysqli_fetch_array($results)) {
                     $tid=  $row['tid'];
-                    $gettrans_records = "select sum(total) as total_pay from trans_record where transaction_id = '$tid'  ";
-                    $gettingtrans = mysqli_query($con,$gettrans_records); 
-                    $gtrans = mysqli_fetch_array($gettingtrans)
+          
                 ?>
         <tr>
             <td>MN_<?php echo $row['tid']; ?></td>
             <td><?php echo $row['datecreated']; ?></td>
             <td><?php echo $row['name'].' '.$row['lastname']; ?></td>
-            <td>₱ <?php echo $gtrans['total_pay']; ?></td>
+            <td>₱ <?php echo $row['total_amount']; ?></td>
             <td>
                 <div class="pending"><?php echo $row['stat']; ?></div>
             </td>
@@ -33,6 +31,8 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-dark text-light confirmd" data-od="<?php echo $tid ?>"
                         data-date="<?php echo $row['datecreated'] ?>" data-userid="<?php echo $row['user_id']  ?>"
+                        data-purchased="<?php echo $row['total_purchased'] ?>"
+                        data-discount="<?php echo $row['discount'] ?>" data-amount="<?php echo $row['total_amount'] ?>"
                         style="font-size: 14px;font-weight: bolder;">Confirm</button>
 
                 </div>
@@ -77,7 +77,7 @@
                         </div>
                     </div>
 
-                  
+
 
 
 
@@ -86,6 +86,46 @@
                     <hr>
                     <h6>Product Order List</h6>
                     <div id='list_purchased_prod'> </div>
+
+
+                    <center>
+
+                        <table>
+
+                            <tr>
+                                <td>
+                                   Total Purchased : 
+                                </td>
+                                <td>
+                                    ₱ <label id='order_purchased'> </label>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    Discount : 
+                                </td>
+                                <td>
+                                    ₱ - <label id='order_discount'> </label>
+                                       
+                                   
+                                </td>
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    Total Amount : 
+                                </td>
+                                <td>
+                                    ₱  <label id='order_total'> </label>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </center>
 
 
 
@@ -108,6 +148,16 @@ $('.confirmd').click(function() {
     var od = $(this).data('od');
     var date = $(this).data('date');
     var userid = $(this).data('userid');
+
+    var purchased = $(this).data('purchased');
+    var discount = $(this).data('discount');
+    var amount = $(this).data('amount');
+
+    $('#order_purchased').text(purchased)
+    $('#order_discount').text(discount)
+    $('#order_total').text(amount)
+
+
 
     console.log(userid);
     $('#orderDetails').modal('show')

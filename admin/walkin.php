@@ -5,6 +5,10 @@ if (isset($_GET['trans'])) {
     $trans_id = $_GET['trans'];
 } 
 
+$sql = "SELECT * FROM transaction where tid='$trans_id'";
+$result = mysqli_query($con, $sql);
+$arr = mysqli_fetch_array($result);
+$trans_code = $arr['trans_code'];
 
 
  ?>
@@ -12,12 +16,8 @@ if (isset($_GET['trans'])) {
 
 </head>
 <link rel="stylesheet" href="css/walkin.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
+
 <link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/bootstrap.js"></script>
 
 
 
@@ -32,7 +32,7 @@ if (isset($_GET['trans'])) {
         <div class="container-p">
             <div class="flex-2-p">
                 <span class=" bg-warning">
-                    <h4>Walk in ID : #<?php echo  $trans_id ?></h4>
+                    <h4>Walk in ID : # <?php echo  $trans_code  ?></h4>
                 </span>
                 <hr>
                 <div class="table-box-p">
@@ -54,8 +54,7 @@ if (isset($_GET['trans'])) {
                 <div class="bar-top">
                     <br>
                     <div class="dtable">
-                        <?php   $listProd = mysqli_query($con, "SELECT * from product
-                        LEFT JOIN product_quantity on product.prod_id = product_quantity.prod_id");?>
+                        <?php   $listProd = mysqli_query($con, "SELECT * from product");?>
 
 
                         <table id="table-prods" class="table">
@@ -70,12 +69,20 @@ if (isset($_GET['trans'])) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($row = mysqli_fetch_array($listProd)) { ?>
+                                <?php while ($row = mysqli_fetch_array($listProd)) { 
+                                    
+                                    $prod_id =$row['prod_id'];
+                                    $sql  = mysqli_query($con, "SELECT production_log.prod_id, sum(production_log.qty_remaining) AS quantity
+                                        FROM production_log
+                                        LEFT JOIN product ON product.prod_id = production_log.prod_id
+                                        WHERE production_log.prod_id='$prod_id' and production_log.status ='ACTIVE' or production_log.status ='LOW'");
+                                        $arr = mysqli_fetch_array($sql);
+                                    ?>
                                 <tr>
                                     <td hidden><?php echo $row['prod_id']?></td>
                                     <td><?php echo $row['barcode']?></td>
                                     <td><?php echo $row['name']?></td>
-                                    <td><?php echo $row['quantity']?></td>
+                                    <td> <?php echo  (empty($arr['quantity'])) ? "0" : $arr['quantity']; ?></td>
                                     <td> ₱ <?php echo number_format($row['price'],2); ?></td>
                                     <td><button type="button" id='btnAdd' class='btnAdd'><i
                                                 class="fa fa-plus-circle"></i></button>
@@ -105,6 +112,14 @@ if (isset($_GET['trans'])) {
         </div>
     </main>
 </body>
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="../js/datatable/datatables.js"></script>
+
+
+
 
 </html>
 <?php include('modal/walkin_modal.php')?>
@@ -140,8 +155,8 @@ $(document).ready(function() {
         $("#customer_pay").keyup(function() {
 
 
-            total = $('#con_total_amount').val().replace(/[^0-9]/g, "");
-            pay = $('#customer_pay').val()
+            total = $('#con_total_amount').val().replace(/[^0-9.]/g, "");
+            pay = $('#customer_pay').val().replace(/[^0-9.]/g, "");
 
             total = isNaN(total) ? 0 : parseFloat(total);
             pay = isNaN(pay) ? 0 : parseFloat(pay);
@@ -151,9 +166,9 @@ $(document).ready(function() {
 
             console.log(parseFloat(+pay))
 
-            changes =   parseFloat(+pay)   - (parseFloat(+total))
+            changes = parseFloat(+pay) - (parseFloat(+total))
 
-            document.getElementById("trans_changes").value = (+changes);
+            document.getElementById("trans_changes").value = (+changes.toFixed(2));
 
         });
     });

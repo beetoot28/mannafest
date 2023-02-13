@@ -29,20 +29,25 @@ include 'connections/connect.php';
 
 		if(isset($_POST['payment'])){ 
 			$pm = $_POST['pm'];
+			$total = $_POST['total'];
+			$total_purchased = $_POST['total_purchased'];
+			$discount = $_POST['discount'];
+
+
 			$user = $_SESSION['user_id'];
 			date_default_timezone_set('Asia/Manila');
 			$datenow = date('Y-m-d H:i:s');
-		$_SESSION['sccsfl'] = 1;
+			$_SESSION['sccsfl'] = 1;
 
-		$_SESSION['pmt_method'] = $pm;
+				$_SESSION['pmt_method'] = $pm;
 				$disc =  $_SESSION['disc'];
 
 
 
 
 					//create transaction
-						$create_transaction = "INSERT INTO `transaction`(`user_id`, `paymentmethod`, `datecreated`,`status`,`type`) 
-																	VALUES ('$user','$pm','$datenow','pending','online')  ";
+						$create_transaction = "INSERT INTO `transaction`(`user_id`, `paymentmethod`, `datecreated`,`status`,`type`,`total_purchased`,`discount`,`total_amount`) 
+																	VALUES ('$user','$pm','$datenow','pending','online','$total_purchased','$discount','$total')  ";
 						 $transcation_ = mysqli_query($con,$create_transaction); 
 						
 						 $transaction_id = mysqli_insert_id($con);

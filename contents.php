@@ -7,6 +7,21 @@ if (isset($_POST['gettheitemsview']))
     $id = $_POST['id'];
 
 ?>
+<style>
+@media only screen and (max-width: 767px) {
+  .card {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 767px) {
+    .circle {
+        width: 100px;
+        height: 100px;
+    }
+}
+</style>
 <div class="row">
     <div class="col-md-8">
 
@@ -124,24 +139,7 @@ if (isset($_POST['gettheitemsview']))
 
         <?php
 
-        /*   $user = $_SESSION['user_id'];
-        
-                  $checkifonthelist = " select * from wishlist where prod_id ='$id' and user_id = '$user'  ";
-                              $checkingitem = mysqli_query($con,$checkifonthelist); 
-                              $thecountings= mysqli_num_rows($checkingitem);
-                             //  $get_id =  mysqli_insert_id($con); 
-                           if ($thecountings>=1){
-                           ?>
-        <button class="btn btn-light text-danger removewlist" data-productid="<?php echo $id ?>"
-            style="font-size: 13px;font-weight: bold"><i class="fas fa-heart"></i></button>
-        <?php
-                        }else {
-                        ?>
-        <button class="btn btn-light text-danger addwishlist" data-productid="<?php echo $id ?>"
-            style="font-size: 13px;font-weight: bold"><i class="far fa-heart"></i></button>
-        <?php
-                        }
-        */
+     
 ?>
 
         <?php
@@ -251,10 +249,8 @@ if (isset($_POST['allitems']))
 ?>
 
 <!--TOP PRODUCT DISPLAY INDEX-->
-
-<div class="col-md-3 ">
-
-    <div class="card w-100 " style="height:100%;width:100%">
+<div class="col-md-3 col-sm-6">
+  <div class="card w-100 h-100">
         <?php
             $get_items_photo = " SELECT * FROM `photo` where prod_id = '$itemid' limit 1 ";
             $productphotos = mysqli_query($con, $get_items_photo);

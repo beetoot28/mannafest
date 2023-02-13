@@ -4,7 +4,7 @@ include "../connections/connect.php";
 if (!isset($_SESSION["cour_id"])) {
     header("location:../log/signin.php");
 }
-$courier_id = $_SESSION["cour_id"];
+ $courier_id = $_SESSION["cour_id"];
 
 $sql  = mysqli_query($con, "SELECT *  from accounts where user_id='$courier_id'");
 $users_row = mysqli_fetch_array($sql);
@@ -84,13 +84,13 @@ if (isset($_GET['tab'])) {
 
 
     <?php 
-  $sql = " select * from courier_trans where user_id='$courier_id' and date='$dateNow'  ";
+  $sql = " select * from courier_trans where user_id='$courier_id'";
   $res = mysqli_query($con,$sql); 
   $arr= mysqli_fetch_array($res);
 
-$cash_on_hand = $arr['total_cash_onhand'];
-$total_amount = $arr['total_amount'];
-$total_remit = $arr['total_remit'];
+$cash_on_hand =  (!empty($arr['total_cash_onhand']) ? $arr['total_cash_onhand'] : 0); 
+$total_amount =  (!empty($arr['total_amount']) ? $arr['total_amount'] : 0); 
+$total_remit = (!empty($arr['total_remit']) ? $arr['total_remit'] : 0); 
 ?>
     <?php include "modal/remit_moda.php"; ?>
     <section class="home-section">
@@ -208,9 +208,9 @@ $total_remit = $arr['total_remit'];
                             <td><?php echo $row['date']; ?></td>
                             <td><?php echo $rider_name ?></td>
 
-                            <td>₱ <?php echo $row['total_amount'] ?></td>
-                            <td>₱ <?php echo $row['total_remit']; ?></td>
-                            <td>₱ <?php echo $row['total_cash_onhand']; ?></td>
+                            <td>₱ <?php echo number_format($row['total_amount'],2) ?></td>
+                            <td>₱ <?php echo number_format($row['total_remit'],2); ?></td>
+                            <td>₱ <?php echo number_format($row['total_cash_onhand'],2); ?></td>
 
                         </tr>
 

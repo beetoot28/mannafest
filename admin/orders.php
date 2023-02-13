@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../connections/connect.php";
 if (!isset($_SESSION["admin_id"])) {
     header("location:../log/signin.php");
 }
@@ -9,14 +10,15 @@ if (!isset($_SESSION["admin_id"])) {
 
 <?php
 include "head.php";
-include "../connections/connect.php";
+
 
 $tab= '';
 if (isset($_GET['tab'])) {
     $tab = filter_var($_GET['tab']) ;
   }
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<link rel='stylesheet' href='css/dataTables.dateTime.min.css'>
+
 
 <link rel='stylesheet' href='css/tab-orders.css'>
 
@@ -88,13 +90,17 @@ if (isset($_GET['tab'])) {
                         <?php if ($tab == '3') { echo 'checked'; } else { echo ''; } ?>>
                     <input type="radio" name="slider" id="help"
                         <?php if ($tab == '4') { echo 'checked'; } else { echo ''; } ?>>
-                    <input type="radio" name="slider" id="about"
+                    <input type="radio" name="slider" id="cancel"
                         <?php if ($tab == '5') { echo 'checked'; } else { echo ''; } ?>>
+
+                    <input type="radio" name="slider" id="about"
+                        <?php if ($tab == '6') { echo 'checked'; } else { echo ''; } ?>>
                     <nav>
                         <label for="home" class="home"><i class="fa fa-book"></i>New Orders</label>
                         <label for="blog" class="blog"><i class="fas fa-tasks"></i>Preparing</label>
                         <label for="code" class="code"><i class="fa-solid fa-truck"></i> On Delivery</label>
                         <label for="help" class="help"><i class="fa-solid fa-check"></i> Completed</label>
+                        <label for="cancel" class="cancel"><i class="fa-solid fa-times"></i> Cancelled</label>
                         <label for="about" class="about"><i class="fa-solid fa-undo"></i> Returns</label>
 
                         <div class="slider"></div>
@@ -122,11 +128,17 @@ if (isset($_GET['tab'])) {
                         </div>
                         <div class="content content-4">
                             <hr>
-                            <div class="title">Compelted</div>
+                            <div class="title">Completed</div>
                             <?php include('pages/completed.php') ?>
 
                         </div>
                         <div class="content content-5">
+                            <hr>
+                            <div class="title">Cancelled</div>
+
+                            <?php include('pages/cancel.php') ?>
+                        </div>
+                        <div class="content content-6">
                             <hr>
                             <div class="title">Returns</div>
 
@@ -150,7 +162,55 @@ if (isset($_GET['tab'])) {
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#production_table').DataTable();
+    $('#production_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
+
+
+    $('#preparing_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
+
+
+    $('#ondelivery_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
+
+    $('#completed_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
+    $('#cancelled_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
+
+
+    $('#returned_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+
+    });
 
     var max_fields = 10;
     var wrapper = $(".input_fields_wrap");
@@ -181,7 +241,7 @@ $(document).ready(function() {
 
 <script type="text/javascript" src="../js/sidebar.js?v=1"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
+
 <link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
 <!--Bootstrap Plugins-->
 <script type="text/javascript" src="../js/notify.js"></script>
@@ -189,6 +249,11 @@ $(document).ready(function() {
 <script type="text/javascript" src="../js/popper.js"></script>
 <script type="text/javascript" src="../js/bootstrap.js"></script>
 
+
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js"></script>
+<script type="text/javascript"  src="js/dataTables.dateTime.min.js"></script>
+<script type="text/javascript"  src="js/moment.min.js"></script>
+<?php include('orders_script.php') ?>
 
 <?php if (isset($_SESSION['confirmed_order'])): ?>
 <div class="msg">

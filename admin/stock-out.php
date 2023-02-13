@@ -10,7 +10,7 @@ if (!isset($_SESSION["admin_id"])) {
 <?php
 include "head.php";
 include "../connections/connect.php";
-
+date_default_timezone_set('Asia/Manila');
 
 
 ?>
@@ -35,6 +35,116 @@ include "../connections/connect.php";
             <br>
             <div class="main_contents">
                 <div class="container">
+
+                    <div class="row mb-5">
+
+
+                    <div class="col-md-3">
+                            <div class="card shadow border-warning">
+                                <div class="card-body">
+                                    <center>
+                                        <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
+                                            Total Stock Out <br>
+
+
+                                            <?php 
+                                    $current_date = date('Y');
+                                    $total_today  = mysqli_query($con, "SELECT sum(quantity) as total_quantity,transaction.type 
+                                    FROM `trans_record`  LEFT JOIN transaction on trans_record.transaction_id = transaction.tid"); 
+
+                                      $total= mysqli_fetch_array($total_today);
+                                      echo $total['total_quantity'] ? $total['total_quantity'] : 0 ;  
+                                    ?>
+                                        </h5>
+                                        <?php echo $current_date?>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-3">
+                            <div class="card shadow border-warning">
+                                <div class="card-body">
+                                    <center>
+                                        <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
+                                            Total Sold Online <br>
+
+
+                                            <?php 
+                                    $current_date = date('F d, Y');
+                                    $total_today  = mysqli_query($con, "SELECT sum(quantity) as total_quantity,transaction.type 
+                                    FROM `trans_record`  LEFT JOIN transaction on trans_record.transaction_id = transaction.tid
+                                    WHERE DATE(datecreated)=CURDATE() AND type='online'"); 
+
+                                      $total= mysqli_fetch_array($total_today);
+                                      echo $total['total_quantity'] ? $total['total_quantity'] : 0 ;  
+                                    ?>
+                                        </h5>
+                                        <?php echo $current_date?>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card shadow border-success">
+                                <div class="card-body">
+                                    <center>
+                                        <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
+                                            Walkin Total Qty Sold <br>
+
+
+                                            <?php 
+                                    $current_date = date('F d, Y');
+                                    $total_today  = mysqli_query($con, "SELECT sum(quantity) as total_quantity,transaction.type 
+                                    FROM `trans_record`  LEFT JOIN transaction on trans_record.transaction_id = transaction.tid
+                                    WHERE DATE(datecreated)=CURDATE() AND type='walkin'"); 
+
+                            $total= mysqli_fetch_array($total_today);
+                            echo $total['total_quantity'] ? $total['total_quantity'] : 0 ;  
+                                    ?>
+                                        </h5>
+                                        <?php echo $current_date?>
+                                    </center>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <div class="card shadow border-success">
+                                <div class="card-body">
+                                    <center>
+                                        <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
+                                            Distributor Total Qty Sold <br>
+
+
+                                            <?php 
+                                    $current_date = date('F d, Y');
+                                    $total_today  = mysqli_query($con, "SELECT sum(quantity) as total_quantity,transaction.type 
+                                    FROM `trans_record`  LEFT JOIN transaction on trans_record.transaction_id = transaction.tid
+                                    WHERE DATE(datecreated)=CURDATE() AND type='distributor'"); 
+
+                                $total= mysqli_fetch_array($total_today);
+                                echo $total['total_quantity'] ? $total['total_quantity'] : 0 ;  
+                                    ?>
+                                        </h5>
+                                        <?php echo $current_date?>
+                                    </center>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
 
                     <h5 style="font-weight: bolder;">STOCK OUT MONITORING</h5>
                     <hr>
@@ -70,7 +180,7 @@ include "../connections/connect.php";
                                             <td><?php echo $row['barcode']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
                                             <td><?php echo $row['quantity']; ?></td>
-                                            <td><?php echo $row['total']; ?></td>
+                                            <td>₱ <?php echo $row['total']; ?></td>
                                             <td><?php echo $row['type']; ?></td>
 
                                         </tr>

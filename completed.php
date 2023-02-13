@@ -18,7 +18,7 @@ include 'connections/connect.php';
  // / include 'include/allcategorynav.php';
 
   ?>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <style type="text/css">
     @media screen and (max-width: 768px) {
         .banner img {
@@ -108,11 +108,12 @@ include 'connections/connect.php';
                                                          while($row = mysqli_fetch_array($gstatus)){
                                                             $tid = $row['tid'];
                                                             $pm = $row['paymentmethod'];
-
+                                                            $date_completed =$row['date_completed'];
                                                                 $gett_Transrecord = "select * from trans_record where transaction_id = '$tid'  ";
                                                                  $gettingtrans = mysqli_query($con,$gett_Transrecord); 
                                                                
                                                              while($gtrans = mysqli_fetch_array($gettingtrans)){
+                                                            
                                                                     
                                                                  $id = $gtrans['prod_id'];
 
@@ -186,7 +187,7 @@ include 'connections/connect.php';
 
 
                                                         <h6 style="font-weight: bolder;font-size: 14px;"
-                                                            class="mt-3 text-success"> Completed @ : </h6>
+                                                            class="mt-3 text-success"> Completed @ : <?php echo $date_completed ?> </h6>
 
 
 

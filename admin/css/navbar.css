@@ -13,7 +13,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 260px;
+    width: 230px;
     background: #121115d9;
     z-index: 100;
     transition: all 0.5s ease;
@@ -88,12 +88,12 @@
 }
 
 .sidebar .nav-links li i {
-    height: 50px;
+    height: 40px;
     min-width: 78px;
     text-align: center;
-    line-height: 50px;
+    line-height: 40px;
     color: #fff;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -113,7 +113,7 @@
 }
 
 .sidebar .nav-links li a .link_name {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 400;
     color: #fff;
     transition: all 0.4s ease;
@@ -138,7 +138,7 @@
 .sidebar .nav-links li .sub-menu a {
     color: #fff;
     font-size: 15px;
-    padding: 5px 0;
+    padding: 3px 0;
     white-space: nowrap;
     opacity: 0.6;
     transition: all 0.3s ease;
@@ -194,7 +194,7 @@
 .sidebar .profile-details {
     position: fixed;
     bottom: 0;
-    width: 260px;
+    width: 230px;
     display: flex;
     align-items: center;
     justify-content: space-between;

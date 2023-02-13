@@ -15,7 +15,7 @@ include "../connections/connect.php";
 
 ?>
 <link rel='stylesheet' href='css/dataTables.dateTime.min.css'>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 <style>
 .table td {
     font-size: 18px;
@@ -90,7 +90,7 @@ include "../connections/connect.php";
                                             <th>Total Amount</th>
                                             <th>Total Cash Remit</th>
                                             <th>Cash Onhand</th>
-                                            <th>View Record</th>
+                                        
                                         </tr>
                                     </thead>
                                     <tbody style='font-size:20px;font-weight:bold'>
@@ -104,11 +104,7 @@ include "../connections/connect.php";
                                             <td>₱ <?php echo $row['total_amount'] ?></td>
                                             <td>₱ <?php echo $row['total_remit']; ?></td>
                                             <td>₱ <?php echo $row['total_cash_onhand']; ?></td>
-                                            <td>
-                                                <button type="button" class="btn btn-success text-light viewTransRecord"
-                                                    id='viewTransRecord' style="font-size: 12px"><i
-                                                        class="fas fa-book"></i></button>
-                                            </td>
+                                           
                                         </tr>
 
                                         <?php } ?>
@@ -119,7 +115,7 @@ include "../connections/connect.php";
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        <th></th>
+                                    
                                     </tfoot>
                                 </table>
 
@@ -144,18 +140,6 @@ include "../connections/connect.php";
 
 
 </html>
-
-
-<script type="text/javascript" src="../js/sidebar.js?v=1"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
-<link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
-<!--Bootstrap Plugins-->
-<script type="text/javascript" src="../js/notify.js"></script>
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/popper.js"></script>
-<script type="text/javascript" src="../js/bootstrap.js"></script>
-
 
 
 
@@ -205,12 +189,16 @@ include "../connections/connect.php";
         </div>
     </div>
 </div>
-
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
+<!--Bootstrap Plugins-->
+<script type="text/javascript" src="../js/notify.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/popper.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js"></script>
-<script type="text/javascript"  src="js/dataTables.dateTime.min.js"></script>
-<script type="text/javascript"  src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/dataTables.dateTime.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
 
 
 <script>
@@ -286,46 +274,20 @@ maxDate = new DateTime($('#max'), {
 
 
 
-    datatable = $('#remit_table').DataTable({
-  
-        dom: 'Bfrtip',
-        buttons: [
-            'excel', 'pdf', 'print',
-            {
-                extend: 'colvis',
-                collectionLayout: 'fixed columns',
-                collectionTitle: 'Column visibility control'
-            }
-        ],
-        // drawCallback: function() {
-        //     var api = this.api();
-        //     var sum = 0;
-        //     var formated = 0;
-        //     //to show first th
-        //     $(api.column(4).footer()).html('Total');
+remit_table = $('#remit_table').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        'excel', 'pdf', 'print'
+    ],
+   
+});
 
-
-        //     sum = api.column(5, {
-        //         page: 'current'
-        //     }).data().sum();
-
-        //     //to format this sum
-        //     formated = parseFloat(sum).toLocaleString(undefined, {
-        //         minimumFractionDigits: 2
-        //     });
-        //     $(api.column(5).footer()).html('P ' + formated);
-
-
-        // }
-    });
-
-    $('#filter_rider').on('change', function() {
-        var tosearch = '' + this.value + '';
-        datatable.search(tosearch).draw();
-    });
-    $('#min, #max').on('change', function() {
-        datatable.draw();
-    });
-
+$('#min, #max').on('change', function() {
+    remit_table.draw();
+});
+$('#filter_rider').on('change', function() {
+    var tosearch = '' + this.value + '';
+    remit_table.search(tosearch).draw();
+});
 
 </script>

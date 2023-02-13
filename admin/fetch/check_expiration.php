@@ -8,7 +8,7 @@ $query = "SELECT product.name,production_code,production_log.prod_id, exp_date,p
  WHERE status='ACTIVE' or status='LOW'";
 $result = $con->query($query);
 
-
+date_default_timezone_set("Asia/Manila");
 
 if ($result->num_rows > 0) {
 
@@ -100,64 +100,65 @@ function sendMail( $expired_products,$expired_products_quantity,$tomorrow_expiry
 
 
 
-    $phpmailer = new PHPMailer();
+          
+    // $phpmailer = new PHPMailer();
 
-    $phpmailer = new PHPMailer();
+    // $phpmailer = new PHPMailer();
 
-    try {
-        //Server settings
-        $phpmailer->isSMTP();
-        $phpmailer->Host = 'smtp.hostinger.com';
-        $phpmailer->SMTPAuth = true;
-        $phpmailer->Port = 587;
-        $phpmailer->Username = 'notify@mannafest-app.online';
-        $phpmailer->Password = 'Mannafest_101';
+    // try {
+    //     //Server settings
+    //     $phpmailer->isSMTP();
+    //     $phpmailer->Host = 'smtp.hostinger.com';
+    //     $phpmailer->SMTPAuth = true;
+    //     $phpmailer->Port = 587;
+    //     $phpmailer->Username = 'notify@mannafest-app.online';
+    //     $phpmailer->Password = 'Mannafest_101';
     
-        // Check if the email address is valid
-        if (!PHPMailer::validateAddress('mannafestfoodinc@gmail.com')) {
-            throw new Exception("Invalid email address");
-        }
+    //     // Check if the email address is valid
+    //     if (!PHPMailer::validateAddress('mannafestfoodinc@gmail.com')) {
+    //         throw new Exception("Invalid email address");
+    //     }
     
-        $phpmailer->setFrom('notify@mannafest-app.online', 'Mannafest Food Inc. Online');
-        $phpmailer->addAddress('mannafestfoodinc@gmail.com');
+    //     $phpmailer->setFrom('notify@mannafest-app.online', 'Mannafest Food Inc. Online');
+    //     $phpmailer->addAddress('mannafestfoodinc@gmail.com');
 
-        //Attachments
-        //$phpmailer->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-        // $phpmailer->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+    //     //Attachments
+    //     //$phpmailer->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+    //     // $phpmailer->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
-        //Content
-        $phpmailer->isHTML(true);                                  //Set email format to HTML
-        $phpmailer->Subject = 'Expiration Notification | Mannafest Food Online'; 
+    //     //Content
+    //     $phpmailer->isHTML(true);                                  //Set email format to HTML
+    //     $phpmailer->Subject = 'Expiration Notification | Mannafest Food Online'; 
 
-        $today = date("Y-m-d");
-        $tomorrow = date("Y-m-d", strtotime("+1 day"));
-
-
-
-        $phpmailer->Body    = "
-                <center>
-                <img src='https://i.ibb.co/pRm7g7h/logo.png' alt='header' border='0'>
-                    <h3>Mannafest Food Inc. Online</h3>
-                </center>
-                <h2>Number of expired products: " . count($expired_products) . "</h2>
-                Today's date: $today <br>
-                 $message_expired
-                 <hr>
-
-                 <h2>Number of Product that will expire tomorrow ($tomorrow): " . count($tomorrow_expiry_prod) . "</h2>
-                 $message_expired_tom
-                 <hr>
-                    ";
+    //     $today = date("Y-m-d");
+    //     $tomorrow = date("Y-m-d", strtotime("+1 day"));
 
 
-        $phpmailer->send();
-        echo 'Message has been sent';
 
-      $_SESSION['sent']= "successful";
+    //     $phpmailer->Body    = "
+    //             <center>
+    //             <img src='https://i.ibb.co/pRm7g7h/logo.png' alt='header' border='0'>
+    //                 <h3>Mannafest Food Inc. Online</h3>
+    //             </center>
+    //             <h2>Number of expired products: " . count($expired_products) . "</h2>
+    //             Today's date: $today <br>
+    //              $message_expired
+    //              <hr>
 
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    }
+    //              <h2>Number of Product that will expire tomorrow ($tomorrow): " . count($tomorrow_expiry_prod) . "</h2>
+    //              $message_expired_tom
+    //              <hr>
+    //                 ";
+
+
+    //     $phpmailer->send();
+    //     echo 'Message has been sent';
+
+    //   $_SESSION['sent']= "successful";
+
+    // } catch (Exception $e) {
+    //     echo "Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    // }
 
 
 

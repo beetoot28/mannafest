@@ -234,24 +234,7 @@ if(!isset($_SESSION['admin_id'])){
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td>
-                                                    <?php 
-                                 if(isset($disc)){
-                                    echo 'Discounts';
-                                  }else {
-                                    
-                                  }
-                                 ?>
-                                                </td>
-                                                <td>
-                                                    <h6 style=""> <?php 
-                                 if(isset($disc)){
-                                    echo ' -₱'.$disc;
-                                  }else {
-                                    
-                                  }
-                                 ?></h6>
-                                                </td>
+                                            
                                             </tr>
 
                                             <tr>
@@ -408,24 +391,7 @@ if(!isset($_SESSION['admin_id'])){
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td>
-                                                    <?php 
-                                 if(isset($disc)){
-                                    echo 'Discount';
-                                  }else {
-                                    
-                                  }
-                                 ?>
-                                                </td>
-                                                <td>
-                                                    <h6 style=""> <?php 
-                                 if(isset($disc)){
-                                    echo ' -₱'.$disc;
-                                  }else {
-                                    
-                                  }
-                                 ?></h6>
-                                                </td>
+                                                
                                             </tr>
 
                                             <tr>

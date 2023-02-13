@@ -16,6 +16,7 @@ if(isset($_SESSION['admin_id'])){
     <!---->
     <script src="https://kit.fontawesome.com/129b086bc9.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery.Wload.css">
     <title>Signin - Manna</title>
 
@@ -305,7 +306,7 @@ if(isset($_SESSION['admin_id'])){
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
     <script type="text/javascript" src="../js/jquery.Wload.js"></script>
     <script>
     $(document).ready(function() {

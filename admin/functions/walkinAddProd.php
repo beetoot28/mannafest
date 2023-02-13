@@ -8,7 +8,8 @@ include '../../connections/connect.php';
     $product_id = $_POST['product_id'];
     $newQuantity = $_POST['quantity'];
     $price = preg_replace('/[^A-Za-z0-9!. ]/', '',$_POST['price']);
-
+    date_default_timezone_set('Asia/Manila');
+    $datenow = date('Y-m-d H:i:s');
 
 
      $total_amount = ((float)$newQuantity * (float)$price);
@@ -36,8 +37,8 @@ include '../../connections/connect.php';
 
         else{
 
-        $query = "INSERT INTO trans_record (prod_id,transaction_id,quantity,total,price,user_id) 
-                VALUES ('$product_id','$trans_id','$newQuantity','$total_amount','$price','59')";
+        $query = "INSERT INTO trans_record (prod_id,transaction_id,quantity,total,price,user_id,date_ordered) 
+                VALUES ('$product_id','$trans_id','$newQuantity','$total_amount','$price','59','$datenow')";
         $results = mysqli_query($con, $query);
 
     }

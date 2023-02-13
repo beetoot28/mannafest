@@ -64,6 +64,7 @@
 #blog:checked~nav label.blog,
 #code:checked~nav label.code,
 #help:checked~nav label.help,
+#cancel:checked~nav label.cancel,
 #about:checked~nav label.about {
     color: black;
 }
@@ -75,7 +76,7 @@ nav label i {
 nav .slider {
     position: absolute;
     height: 100%;
-    width: 20%;
+    width: 17%;
     left: 0;
     bottom: 0;
     z-index: 0;
@@ -89,19 +90,23 @@ input[type="radio"] {
 }
 
 #blog:checked~nav .slider {
-    left: 20%;
+    left: 17%;
 }
 
 #code:checked~nav .slider {
-    left: 40%;
+    left: 33%;
 }
 
 #help:checked~nav .slider {
-    left: 60%;
+    left: 50%;
+}
+
+#cancel:checked~nav .slider {
+    left: 67%;
 }
 
 #about:checked~nav .slider {
-    left: 80%;
+    left: 84%;
 }
 
 section .content {
@@ -113,7 +118,8 @@ section .content {
 #blog:checked~section .content-2,
 #code:checked~section .content-3,
 #help:checked~section .content-4,
-#about:checked~section .content-5 {
+#cancel:checked~section .content-5,
+#about:checked~section .content-6 {
     display: block;
 }
 

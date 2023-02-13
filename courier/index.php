@@ -91,10 +91,14 @@ if (isset($_GET['tab'])) {
                 <input type="radio" name="slider" id="home" checked>
                 <input type="radio" name="slider" id="blog"
                     <?php if ($tab == '2') { echo 'checked'; } else { echo ''; } ?>>
+                    <input type="radio" name="slider" id="code"
+                    <?php if ($tab == '3') { echo 'checked'; } else { echo ''; } ?>>
+
 
                 <nav>
                     <label for="home" class="home"><i class="fa fa-book"></i>Pending Delivery</label>
                     <label for="blog" class="blog"><i class="fas fa-tasks"></i>Delivered</label>
+                    <label for="code" class="code"><i class="fas fa-times"></i>Cancelled</label>
 
 
                     <div class="slider"></div>
@@ -110,6 +114,13 @@ if (isset($_GET['tab'])) {
                         <hr>
                         <div class="title">Delivered</div>
                         <?php include('pages/delivered.php')?>
+
+
+                    </div>
+                    <div class="content content-3">
+                        <hr>
+                        <div class="title">Cancelled</div>
+                        <?php include('pages/cancel.php')?>
 
 
                     </div>

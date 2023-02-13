@@ -22,7 +22,7 @@ $today = $currentYear.
    if($sales_count->num_rows > 0) {
      foreach($sales_count as $data) {
          $sale_month[] = $data['monthname'];
-         $sale_amount[] = $data['month_total'];
+         $sale_amount['data'][] = number_format($data['month_total'],2);
      }
  }
 
@@ -44,10 +44,9 @@ if($inv_cost_selling->num_rows > 0) {
 }
 
 
+
+
 ?>
-
-
-
 
 
 new Chart(sales_trend, {

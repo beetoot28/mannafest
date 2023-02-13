@@ -38,7 +38,7 @@ include "modal/product_modal.php";
 
 
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 <style>
 .table td {
     font-size: 18px;
@@ -76,11 +76,12 @@ include "modal/product_modal.php";
                                 <?php $results  = mysqli_query($con, "SELECT *,transaction.status as stat , sum(trans_record.total) as total_amount FROM `transaction` 
                                 LEFT JOIN accounts ON transaction.user_id = accounts.user_id LEFT JOIN trans_record ON transaction.tid = trans_record.transaction_id 
                                 WHERE transaction.type='walkin' group by tid"); ?>
-                                <table id="product_table" class="table table-hover" style="width:100%;">
+                                <table id="walkintable" class="table table-hover" style="width:100%;">
                                     <thead class="table-warning">
                                         <tr style='font-size:14px'>
 
-                                            <th> Transaction ID </th>
+                                            <th hidden> Transaction ID </th>
+                                            <th>Transaction Code</th>
                                             <th>Date</th>
                                             <th>Total Purchased</th>
                                             <th>Pay</th>
@@ -96,7 +97,8 @@ include "modal/product_modal.php";
                                  
                                             ?>
                                         <tr>
-                                            <td><?php echo $row['tid']; ?> </td>
+                                            <td hidden><?php echo $row['tid']; ?> </td>
+                                            <td><?php echo $row['trans_code']; ?> </td>
                                             <td><?php echo $row['datecreated']; ?></td>
                                             <td>₱ <?php echo number_format($row['total_amount'],2)?></td>
                                             <td>₱ <?php echo number_format($row['trans_pay'],2)?></td>
@@ -109,8 +111,9 @@ include "modal/product_modal.php";
                                                         class="fas fa-book"></i> </button>
 
                                                 <?php  if( $row['stat'] =='walkin-pending') {?>
-                                                <a href='walkin.php?trans=<?php echo $row['tid']?>' type="button" class="btn btn-dark text-light "
-                                                    style="font-size: 12px"><i class="fas fa-edit"></i> </a>
+                                                <a href='walkin.php?trans=<?php echo $row['tid']?>' type="button"
+                                                    class="btn btn-dark text-light " style="font-size: 12px"><i
+                                                        class="fas fa-edit"></i> </a>
                                                 <?php } ?>
                                             </td>
                                         </tr>
@@ -142,16 +145,16 @@ include "modal/product_modal.php";
 
 </html>
 
-
-<script type="text/javascript" src="../js/sidebar.js?v=1"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
 <link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
 <!--Bootstrap Plugins-->
 <script type="text/javascript" src="../js/notify.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/popper.js"></script>
 <script type="text/javascript" src="../js/bootstrap.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js"></script>
+<script type="text/javascript" src="js/dataTables.dateTime.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
 
 
 
@@ -189,29 +192,51 @@ include "modal/product_modal.php";
 <!-- Modal View-->
 <div class="modal fade" id="viewSalesDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="receivingViewLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="receivingViewLabel">SALE RECORD</h5>
+                <h5 class="modal-title" id="receivingViewLabel">TRANSACTION RECORD</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-sm" hidden>
                         <label> Transactio ID </label> <br>
                         <input id='s_trans_id' class='form-control' style='font-size:20px;border: none;font-weight:bold'
                             readonly>
+                    </div>
+
+                    <div class="col-sm">
+                        <label> Transactio Code </label> <br>
+                        <input id='s_trans_code' class='form-control'
+                            style='font-size:20px;border: none;font-weight:bold' readonly>
                     </div>
                     <div class="col-sm">
                         <label> Date :</label> <br>
                         <input id='s_date' class='form-control' style='font-size:20px;border: none;font-weight:bold'
                             readonly>
                     </div>
+
+
+                </div>
+                <br>
+                <div class="row">
                     <div class="col-sm">
-                        <label>Transaction Type</label> <br>
-                        <input id='s_trans_type' name='voucher' class='form-control'
+                        <label>Total Amount Paid</label> <br>
+                        <input id='amount_paid' name='voucher' class='form-control'
                             style='font-size:20px;border: none;font-weight:bold' readonly>
+                    </div>
+                    <div class="col-sm">
+                        <label> Total Purchased :</label> <br>
+                        <input id='total_purchased' class='form-control'
+                            style='font-size:20px;border: none;font-weight:bold' readonly>
+                    </div>
+
+                    <div class="col-sm">
+                        <label> Change:</label> <br>
+                        <input id='changes' class='form-control' style='font-size:20px;border: none;font-weight:bold'
+                            readonly>
                     </div>
                 </div>
 
@@ -239,18 +264,22 @@ $('.viewTransRecord').on('click', function() {
     }).get();
 
     $('#s_trans_id').val(data[0]);
-    $('#s_date').val(data[1]);
-    $('#s_trans_type').val(data[3]);
+    $('#s_trans_code').val(data[1]);
+    $('#s_date').val(data[2]);
+    $('#amount_paid').val(data[4]);
+    $('#total_purchased').val(data[3]);
+    $('#changes').val(data[5]);
 
     function fetch_table() {
 
         var trans_id = (data[0]);
+        var trans_code = (data[1]);
         $.ajax({
             url: "table/sales_record_table.php",
             method: "POST",
             data: {
                 trans_id: trans_id,
-
+                trans_code: trans_code,
             },
             success: function(data) {
                 $('#view_sales_rec').html(data);
@@ -260,6 +289,14 @@ $('.viewTransRecord').on('click', function() {
     fetch_table();
     $('#viewSalesDetails').modal('show');
 
+
+});
+
+$('#walkintable').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        'excel', 'pdf', 'print'
+    ],
 
 });
 </script>

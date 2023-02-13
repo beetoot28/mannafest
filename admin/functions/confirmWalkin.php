@@ -54,7 +54,7 @@ include '../../connections/connect.php';
 
           
     $update = "UPDATE  transaction set status ='walkin-completed' ,
-    trans_pay='$trans_pay',trans_changes='$trans_changes'
+    trans_pay='$trans_pay',trans_changes='$trans_changes',total_amount='$total_amount'
     WHERE  tid='$transaction_id'";
     $results = mysqli_query($con, $update);
 

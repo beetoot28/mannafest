@@ -1,28 +1,29 @@
 <div class="row">
-    <div class="col-sm-9">
+    <div class="col-sm-10">
         <center>
             <h5 style="font-weight: bolder;">Sales Report</h5>
         </center>
 
-        <table id="table-shelves" class="table display nowrap" style="width:100%;">
-            <?php
 
-     $retail = mysqli_query($con,"SELECT YEAR(date_ordered) AS year,MONTHNAME(date_ordered) AS month,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'January' THEN total END) AS JAN,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'February' THEN total END) AS FEB,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'March' THEN total END) AS MAR,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'April' THEN total END) AS APR,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'May' THEN total END) AS MAY,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'June' THEN total END) AS JUNE,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'July' THEN total END) AS JULY,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'August' THEN total END) AS AUG,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'September' THEN total END) AS SEP,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'October' THEN total END) AS OCT,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'November' THEN total END) AS NOV,
-     SUM(CASE WHEN MONTHNAME(date_ordered) = 'December' THEN total END) AS DECE
- FROM trans_record WHERE YEAR(date_ordered) = 2023 GROUP BY month");        
+        <?php
+
+     $retail = mysqli_query($con,"SELECT YEAR(datecreated) AS year,MONTHNAME(datecreated) AS month,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'January' THEN total_amount END) AS JAN,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'February' THEN total_amount END) AS FEB,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'March' THEN total_amount END) AS MAR,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'April' THEN total_amount END) AS APR,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'May' THEN total_amount END) AS MAY,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'June' THEN total_amount END) AS JUNE,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'July' THEN total_amount END) AS JULY,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'August' THEN total_amount END) AS AUG,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'September' THEN total_amount END) AS SEP,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'October' THEN total_amount END) AS OCT,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'November' THEN total_amount END) AS NOV,
+     SUM(CASE WHEN MONTHNAME(datecreated) = 'December' THEN total_amount END) AS DECE
+        FROM transaction WHERE YEAR(datecreated) = 2023 ");        
 
         ?>
+        <table id="sales_summary_table" class="table" style="width:100%;">
 
             <thead class='table-dark' style="width:100%;font-size: 13px;">
                 <tr>
@@ -65,7 +66,6 @@
                 <?php } ?>
             </tbody>
             <tfoot>
-
                 <th></th>
                 <th></th>
                 <th></th>
@@ -86,7 +86,7 @@
             <h5 style="font-weight: bolder;">Product Trend</h5>
         </center>
 
-        <table id="table-shelves" class="table display nowrap" style="width:100%;">
+        <table id="table-prod_trend" class="table display ">
             <?php
 
      $retail = mysqli_query($con,"SELECT YEAR(date_ordered) AS year,MONTHNAME(date_ordered) AS month,name,
@@ -107,7 +107,7 @@
 
         ?>
 
-            <thead class='table-dark' style="width:100%;font-size: 13px;">
+            <thead class='table-dark'>
                 <tr>
                     <th>Product</th>
                     <th>January</th>
@@ -148,7 +148,7 @@
                 <?php } ?>
             </tbody>
             <tfoot>
-
+            <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -188,7 +188,7 @@
         </div>
 
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
 
         <center>
             <h5 style="font-weight: bolder;">Top Selling Product</h5>
@@ -218,12 +218,12 @@
 
         <?php 
                    
-                   $web_traffic = mysqli_query($con,
-    "SELECT device_type, COUNT(*) AS visitors_today, DATE(date) AS visit_date FROM traffic_log GROUP BY device_type, DATE(date)");?>
-        <table class="table table-hover">
+                   $web_traffic = mysqli_query($con,"SELECT device_type, COUNT(*) AS visitors_today, DATE(date) AS visit_date FROM traffic_log GROUP BY device_type, DATE(date)");?>
+        <table id='table-traffic' class="table table-hover">
             <thead class='table-warning'>
                 <tr>
                     <th scope="col">Date </th>
+                    <th scope="col">Device </th>
                     <th scope="col">Traffic</th>
                 </tr>
             </thead> <?php 
@@ -238,9 +238,281 @@
 
 
 
-        <!-- <div class="card" style="width:100%;max-width:100%;max-height:210px;">
-            <canvas id="web_traffic" style="width:100%;max-width:100%;max-height:251px;"></canvas>
-        </div> -->
-
     </div>
 </div>
+
+
+
+
+
+
+
+<script>
+$('#sales_summary_table').DataTable({
+    dom: 'Bfrtip',
+    "ordering": false,
+    "searching": false,
+    "paging": false,
+    buttons: [{
+            extend: 'excel',
+            title: ' Sales Report This Year'
+        },
+        {
+            extend: 'pdf',
+            title: ' Sales Report This Year'
+        },
+        {
+            extend: 'print',
+            title: ' Sales Report This Year'
+        },
+    ],
+
+
+    drawCallback: function() {
+        var api = this.api();
+
+
+        var formated = 0;
+
+        jan = api.column(0, {
+            page: 'current'
+        }).data().sum();
+
+        feb = api.column(1, {
+            page: 'current'
+        }).data().sum();
+        mar = api.column(2, {
+            page: 'current'
+        }).data().sum();
+        apr = api.column(3, {
+            page: 'current'
+        }).data().sum();
+        may = api.column(4, {
+            page: 'current'
+        }).data().sum();
+        jun = api.column(5, {
+            page: 'current'
+        }).data().sum();
+
+        jul = api.column(6, {
+            page: 'current'
+        }).data().sum();
+        aug = api.column(7, {
+            page: 'current'
+        }).data().sum();
+        sept = api.column(8, {
+            page: 'current'
+        }).data().sum();
+
+        oct = api.column(9, {
+            page: 'current'
+        }).data().sum();
+        nov = api.column(10, {
+            page: 'current'
+        }).data().sum();
+
+        dec = api.column(11, {
+            page: 'current'
+        }).data().sum();
+        //to format this sum
+
+
+        formated_jan = parseFloat(jan).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_feb = parseFloat(feb).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_mar = parseFloat(mar).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_apr = parseFloat(apr).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_may = parseFloat(may).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_jun = parseFloat(jun).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        formated_jul = parseFloat(jul).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        formated_aug = parseFloat(aug).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_sept = parseFloat(sept).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_oct = parseFloat(oct).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_nov = parseFloat(nov).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_dec = parseFloat(dec).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        $(api.column(0).footer()).html('Total :  ' + formated_jan);
+        $(api.column(1).footer()).html(formated_feb);
+        $(api.column(2).footer()).html(formated_mar);
+        $(api.column(3).footer()).html(formated_apr);
+        $(api.column(4).footer()).html(formated_may);
+        $(api.column(5).footer()).html(formated_jun);
+        $(api.column(6).footer()).html(formated_jul);
+        $(api.column(7).footer()).html(formated_aug);
+        $(api.column(8).footer()).html(formated_sept);
+        $(api.column(9).footer()).html(formated_oct);
+        $(api.column(10).footer()).html(formated_nov);
+        $(api.column(11).footer()).html(formated_dec);
+
+    }
+});
+</script>
+
+
+
+<script>
+$('#table-prod_trend').DataTable({
+    dom: 'Bfrtip',
+    "ordering": false,
+    "searching": false,
+    "paging": false,
+    buttons: [{
+            extend: 'excel',
+            title: 'Product Sales Total'
+        },
+        {
+            extend: 'pdf',
+            title: 'Product Sales Total'
+        },
+        {
+            extend: 'print',
+            title: 'Product Sales Total'
+        },
+    ],
+
+
+    drawCallback: function() {
+        var api = this.api();
+
+
+        var formated = 0;
+        $(api.column(0).footer()).html('Total');
+
+
+        jan = api.column(1, {
+            page: 'current'
+        }).data().sum();
+
+        feb = api.column(2, {
+            page: 'current'
+        }).data().sum();
+        mar = api.column(3, {
+            page: 'current'
+        }).data().sum();
+        apr = api.column(4, {
+            page: 'current'
+        }).data().sum();
+        may = api.column(5, {
+            page: 'current'
+        }).data().sum();
+        jun = api.column(6, {
+            page: 'current'
+        }).data().sum();
+
+        jul = api.column(7, {
+            page: 'current'
+        }).data().sum();
+        aug = api.column(8, {
+            page: 'current'
+        }).data().sum();
+        sept = api.column(9, {
+            page: 'current'
+        }).data().sum();
+
+        oct = api.column(10, {
+            page: 'current'
+        }).data().sum();
+        nov = api.column(11, {
+            page: 'current'
+        }).data().sum();
+
+        dec = api.column(12, {
+            page: 'current'
+        }).data().sum();
+        //to format this sum
+
+
+        formated_jan = parseFloat(jan).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_feb = parseFloat(feb).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_mar = parseFloat(mar).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_apr = parseFloat(apr).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_may = parseFloat(may).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_jun = parseFloat(jun).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        formated_jul = parseFloat(jul).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        formated_aug = parseFloat(aug).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+        formated_sept = parseFloat(sept).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_oct = parseFloat(oct).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_nov = parseFloat(nov).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        formated_dec = parseFloat(dec).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+
+
+        $(api.column(1).footer()).html(formated_jan);
+        $(api.column(2).footer()).html(formated_feb);
+        $(api.column(3).footer()).html(formated_mar);
+        $(api.column(4).footer()).html(formated_apr);
+        $(api.column(5).footer()).html(formated_may);
+        $(api.column(6).footer()).html(formated_jun);
+        $(api.column(7).footer()).html(formated_jul);
+        $(api.column(8).footer()).html(formated_aug);
+        $(api.column(9).footer()).html(formated_sept);
+        $(api.column(10).footer()).html(formated_oct);
+        $(api.column(11).footer()).html(formated_nov);
+        $(api.column(12).footer()).html(formated_dec);
+
+    }
+});
+</script>

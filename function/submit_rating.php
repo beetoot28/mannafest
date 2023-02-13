@@ -27,10 +27,12 @@ if(isset($_POST["rating_data"]))
 	$user_id = $_POST["user_id"];
 	$user_rating = $_POST["rating_data"];
 	$user_review = $_POST["user_review"];
+	$trans_id = $_POST["trans_id"];
+	
 	$datetime = time();
 
-	$query = "INSERT INTO review_table (prod_id,user_id,user_rating,user_review,datetime) 
-	VALUES ('$prod_id','$user_id','$user_rating','$user_review','$datetime')";
+	$query = "INSERT INTO review_table (prod_id,user_id,user_rating,user_review,datetime,transaction_id) 
+	VALUES ('$prod_id','$user_id','$user_rating','$user_review','$datetime','$trans_id')";
 	$results = mysqli_query($con, $query);
 
 

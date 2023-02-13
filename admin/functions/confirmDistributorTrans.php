@@ -16,9 +16,9 @@ include '../../connections/connect.php';
     
    
 
-      // Minus from the NTC Bodega
-      $p_qty = mysqli_query($con, "SELECT * from product_quantity where prod_id='$product_id'");
-      $p_arr = mysqli_fetch_array($p_qty);
+      // // Minus from the NTC Bodega
+      // $p_qty = mysqli_query($con, "SELECT * from product_quantity where prod_id='$product_id'");
+      // $p_arr = mysqli_fetch_array($p_qty);
       
       $inv = $p_arr['quantity'];
 
@@ -40,7 +40,9 @@ include '../../connections/connect.php';
     }
 
           
-    $update = "UPDATE  transaction set status ='distributor-completed' WHERE  tid='$transaction_id'";
+    $update = "UPDATE  transaction set status ='distributor-completed',
+    total_amount='$total_amount'
+     WHERE  tid='$transaction_id'";
     $results = mysqli_query($con, $update);
 
      

@@ -11,17 +11,20 @@ left join distributor_details on transaction.dis_id = distributor_details.dis_id
 $arr_dis = mysqli_fetch_array($sql);
 $distributor_name = $arr_dis['distributor_name'];
 
+
+$sql = "SELECT * FROM transaction where tid='$trans_id'";
+$result = mysqli_query($con, $sql);
+$arr = mysqli_fetch_array($result);
+$trans_code = $arr['trans_code'];
+
+
+
  ?>
 
 
 </head>
 <link rel="stylesheet" href="css/walkin.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
 <link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/bootstrap.js"></script>
 
 
 
@@ -36,9 +39,9 @@ $distributor_name = $arr_dis['distributor_name'];
         <div class="container-p">
             <div class="flex-2-p">
                 <span class=" bg-warning">
-                    <h4>Trans ID : #<?php echo  $trans_id ?></h4>
+                    <h4>Trans Code : #<?php echo  $trans_code  ?></h4>
 
-                    <h4>Distributor : #<?php echo  $arr_dis['distributor_name'] ?></h4>
+                    <h4>Distributor : <?php echo  $arr_dis['distributor_name'] ?></h4>
                 </span>
                 <hr>
                 <div class="table-box-p">
@@ -60,8 +63,7 @@ $distributor_name = $arr_dis['distributor_name'];
                 <div class="bar-top">
                     <br>
                     <div class="dtable">
-                        <?php   $listProd = mysqli_query($con, "SELECT * from product
-                        LEFT JOIN product_quantity on product.prod_id = product_quantity.prod_id");?>
+                        <?php   $listProd = mysqli_query($con, "SELECT * from product");?>
 
 
                         <table id="table-prods" class="table">
@@ -77,12 +79,12 @@ $distributor_name = $arr_dis['distributor_name'];
                             </thead>
                             <tbody>
                                 <?php while ($row = mysqli_fetch_array($listProd)) { 
-                                    $prod_id =$row['prod_id'];
-                                     $sql  = mysqli_query($con, "SELECT production_log.prod_id, sum(production_log.qty_remaining) AS quantity
-                                              FROM production_log
-                                              LEFT JOIN product ON product.prod_id = production_log.prod_id
-                                              WHERE production_log.prod_id='$prod_id' and production_log.status ='ACTIVE' or production_log.status ='LOW'");
-                                              $arr = mysqli_fetch_array($sql);
+                                   $prod_id =$row['prod_id'];
+                                   $sql  = mysqli_query($con, "SELECT production_log.prod_id, sum(production_log.qty_remaining) AS quantity
+                                       FROM production_log
+                                       LEFT JOIN product ON product.prod_id = production_log.prod_id
+                                       WHERE production_log.prod_id='$prod_id' and production_log.status ='ACTIVE' or production_log.status ='LOW'");
+                                       $arr = mysqli_fetch_array($sql);
                                     
                                     
                                     ?>
@@ -120,6 +122,11 @@ $distributor_name = $arr_dis['distributor_name'];
         </div>
     </main>
 </body>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="../js/datatable/datatables.js"></script>
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
 
 </html>
 <?php include('modal/distributor_modal.php')?>
@@ -185,7 +192,7 @@ $(document).ready(function() {
         $('#barcode').val(data[1]);
         $('#p_name').val(data[2]);
 
-        $('#p_price').val(data[4].replace(/[^0-9]/g, ""));
+        $('#p_price').val(data[4].replace(/[^0-9.]/g, ""));
     });
 
 

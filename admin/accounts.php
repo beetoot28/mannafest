@@ -1,5 +1,6 @@
 <?php 
 session_start();
+include "../connections/connect.php";
 if(!isset($_SESSION['admin_id'])){
   header('location:../log/signin.php');
 }
@@ -246,7 +247,7 @@ if(!isset($_SESSION['admin_id'])){
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 
     <script>
     $(document).ready(function() {

@@ -1,5 +1,6 @@
 <?php 
 session_start();
+include "../connections/connect.php";
 if(!isset($_SESSION['admin_id'])){
   header('location:../log/signin.php');
 }

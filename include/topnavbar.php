@@ -87,57 +87,36 @@
 
                     <?php
                         }
+                    ?>
 
-                        if (isset($_SESSION['user_isset'])) {
+                    <?php
+if (isset($_SESSION['user_isset'])) {
+    $user = $_SESSION['user_id'];
+    $check_order = "SELECT * FROM transaction WHERE user_id = '$user' AND status != 'completed'";
+    $result = mysqli_query($con, $check_order); 
+    $count = mysqli_num_rows($result);
 
-                            
-                    
-                         ?>
-                    <?php 
-                                    $user =$_SESSION['user_id'];
-                                    $checkif_thersorder = "select * from transaction where user_id ='$user' and status != 'completed'  ";
-                                    $chckingorder = mysqli_query($con,$checkif_thersorder); 
-                                    $count= mysqli_num_rows($chckingorder);
-                                    
-                                    if($count >=1){
-                                    while($row = mysqli_fetch_array($chckingorder)){
-                                        $porder = $row['tid'];  
-                                    }
-                                         ?>
+    if ($count >= 1) {
+        $row = mysqli_fetch_array($result);
+        $porder = $row['tid'];
+        echo '<button class="btn mt-3 text-dark" onclick="window.location.href=\'orders.php?p=' . $porder . '\'" style="border-radius: 25px; position: relative; margin-left: 10px;">
+            <i class="fas fa-truck" style="font-size: 20px;"></i>';
+    } else {
+        echo '<button class="btn mt-3 text-dark" onclick="window.location.href=\'orders.php\'" style="border-radius: 25px; position: relative; margin-left: 10px;">
+            <i class="fas fa-truck" style="font-size: 20px;"></i>';
+    }
 
-                    <button class="btn mt-3 text-dark "
-                        onclick="window.location.href='orders.php?p=<?php echo $porder ?>'"
-                        style="border-radius: 25px;position: relative; margin-left: 10px;">
-                        <?php   
-                                                }else {
-                                                ?>
-                        <button class="btn mt-3 text-dark " onclick="window.location.href='orders.php'"
-                            style="border-radius: 25px;position: relative; margin-left: 10px;">
-                            <?php
-                                            }
+    $sql = "SELECT * FROM transaction WHERE (status='otw' OR status='delivered'  OR status='pending') AND user_id='$user'";
+    $orders = mysqli_query($con, $sql);
+    $allOrders = mysqli_num_rows($orders);
 
-                                            ?>
+    if ($allOrders > 0) {
+        echo '<span class="badge badge-danger bg-danger" style="font-size: 10px; border-radius: 20px; position: absolute;">' . $allOrders . '</span>';
+    }
 
-
-                            <i class="fas fa-truck" style="font-size: 20px;"></i>
-                            <span class="badge badge-danger bg-danger"
-                                style="font-size: 10px;border-radius: 20px;position: absolute;">
-                                <?php 
-                                $sql = " select * from transaction where status !='completed' and user_id ='$user'   ";
-                                            $orders = mysqli_query($con,$sql); 
-                                            $allOrders= mysqli_num_rows($orders);
-                                        if ($allOrders ='0'){
-
-                                        }else{
-                                            echo $allOrders;   
-                                        }
-                                      
-
-                             ?>
-                            </span>
-                        </button>
-                        <?php } ?>
-
+    echo '</button>';
+}
+?>
                 </div>
 
                 <div class="col">
@@ -200,7 +179,7 @@
 
 
                     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 
                     <script type="text/javascript">
                     $(document).ready(function() {
@@ -260,4 +239,3 @@
 
 
 </nav>
-

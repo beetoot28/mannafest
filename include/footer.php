@@ -28,7 +28,7 @@
     </div>
     <div class="footer_middle">
         <ul>
-            <li><a href="">About Us</a></li>
+            <li><a href="about.php">About Us</a></li>
             <li><a href="">Contact Us</a></li>
             <li><a href="">Return Policy</a></li>
 
@@ -37,64 +37,69 @@
     <div class="footer_right">
         <h2>We love to hear from you!</h2>
         <br>
-        <?php echo((!empty($errorMessage)) ? $errorMessage : '') ?>
+
         <form action="function/contact_us.php" method='post'>
             <div class="div_name_email">
                 <input type="text" name='name' placeholder="Name">
                 <input type="email" name='email' placeholder="Email">
             </div>
             <div class="feedback">
-                <textarea  name="message" id="" cols="30" rows="10" placeholder="Your feedback"></textarea>
+                <textarea name="feedback" id="" cols="30" rows="10" placeholder="Your feedback"></textarea>
             </div>
             <center>
                 <button type="submit" name="send" id="feedback_submit">SUBMIT</button>
             </center>
         </form>
+
     </div>
 </footer>
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
- <script>
+<script>
+const constraints = {
+    name: {
+        presence: {
+            allowEmpty: false
+        }
+    },
+    email: {
+        presence: {
+            allowEmpty: false
+        },
+        email: true
+    },
+    message: {
+        presence: {
+            allowEmpty: false
+        }
+    }
+};
+
+const form = document.getElementById('contact-form');
+form.addEventListener('submit', function(event) {
+
+    const formValues = {
+        name: form.elements.name.value,
+        email: form.elements.email.value,
+        message: form.elements.message.value
+    };
 
 
-     const constraints = {
-         name: {
-             presence: { allowEmpty: false }
-         },
-         email: {
-             presence: { allowEmpty: false },
-             email: true
-         },
-         message: {
-             presence: { allowEmpty: false }
-         }
-     };
+    const errors = validate(formValues, constraints);
+    if (errors) {
+        event.preventDefault();
+        const errorMessage = Object
+            .values(errors)
+            .map(function(fieldValues) {
+                return fieldValues.join(', ')
+            })
+            .join("\n");
 
-     const form = document.getElementById('contact-form');
-     form.addEventListener('submit', function (event) {
-
-         const formValues = {
-             name: form.elements.name.value,
-             email: form.elements.email.value,
-             message: form.elements.message.value
-         };
-
-
-         const errors = validate(formValues, constraints);
-         if (errors) {
-             event.preventDefault();
-             const errorMessage = Object
-                 .values(errors)
-                 .map(function (fieldValues) {
-                     return fieldValues.join(', ')
-                 })
-                 .join("\n");
-
-             alert(errorMessage);
-         }
-     }, false);
- </script>
+        alert(errorMessage);
+    }
+}, false);
+</script>
 
 
 

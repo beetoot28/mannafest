@@ -20,7 +20,7 @@ $disList .= '
 
 ?>
 
-<div class="modal fade" id="distributorList" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+<div class="modal fade" id="distributorList" role="dialog" tabindex="-1" data-backdrop="false" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl  ">
         <div class="modal-content">
@@ -72,10 +72,10 @@ $disList .= '
                                         <td> <?php echo $row['distributor_contact']?> </td>
                                         <td> <?php echo $row['distributor_address']?> </td>
                                         <td>
-                                            <button type="button" class="btn btn-info catUpdate"><i
+                                            <button type="button" class="btn btn-info btnEdit"><i
                                                     class="fa fa-edit"></i></button>
 
-                                            <button class="btn btn-danger m-1 btnDelete" type="button"
+                                            <button class="btn btn-danger m-1 btnDeleteDistri" type="button"
                                                 class="btn btn-info"><i class="fa fa-trash"></i></button>
                                         </td>
 
@@ -99,6 +99,70 @@ $disList .= '
 
 
 
+
+<!-- update -->
+<div class="modal fade" id="distriEdit" tabindex="-1"  data-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Distributor Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="col-md-12" method='POST' action='functions/distributor_action.php'>
+                    <div class="mb-12">
+                        <input id='u_id' name='id' hidden>
+                        <label for="category" class="form-label">Update Distributor</label>
+                        <input type="text" class="form-control" name="name" id='u_name' aria-describedby="category"
+                            required>
+
+                        <label for="category" class="form-label">Contact #</label>
+                        <input type="text" class="form-control" name="contact" id='u_contact'
+                            aria-describedby="category">
+
+                        <label for="category" class="form-label">Address</label>
+                        <input type="text" class="form-control" name="address" id='u_address'
+                            aria-describedby="category">
+
+
+                    </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name='update' class="btn btn-success">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="distriDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Remove from Distributor List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <form class="col-md-12" method='POST' action='functions/distributor_action.php'>
+                    <div class="mb-3">
+                        <input id='d_id' name='d_id' hidden>
+                        <div id="category" class="form-text mb-3">Please be advice that it will remove permanently.
+                        </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name='delete' class="btn btn-danger">Continue</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="createTransaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -181,13 +245,15 @@ $disList .= '
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="product_name" class="form-label">Price: </label>
-                                <input type="text" class="form-control" style='font-weight:bold;font-size:30px' name='price' id='p_price' >
+                                <input type="text" class="form-control" style='font-weight:bold;font-size:30px'
+                                    name='price' id='p_price'>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label for="barcode" class="form-label">Quantity</label>
-                            
-                                <input type="text" class="form-control" style='font-weight:bold;font-size:30px' name='quantity' value="1">
+
+                            <input type="text" class="form-control" style='font-weight:bold;font-size:30px'
+                                name='quantity' value="1">
 
                         </div>
                     </div>
@@ -277,7 +343,7 @@ $disList .= '
 
 
 <!-- Delete -->
-<div class="modal fade" id="voidTransfer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="voidTransfer" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -302,3 +368,5 @@ $disList .= '
         </div>
     </div>
 </div>
+
+

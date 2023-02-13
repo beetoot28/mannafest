@@ -17,6 +17,7 @@ if (isset($_POST["cartitems"])) { ?>
 </style>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <div class="row">
 
     <div class="col-md-8">
@@ -238,7 +239,8 @@ if (isset($_POST["cartitems"])) { ?>
                          } else {
                               ?>
                                     <option value="<?php echo $ds; ?>"><?php echo $pc["code"]; ?>
-                                 (<span style="float: right;color:red" class="text-danger">-₱<?php echo $ds; ?></span>)</option>
+                                        (<span style="float: right;color:red"
+                                            class="text-danger">-₱<?php echo $ds; ?></span>)</option>
 
 
                                     <?php
@@ -261,7 +263,6 @@ if (isset($_POST["cartitems"])) { ?>
 
                             <span style="float: right;" class="text-danger" id="dsct"></span> <br>
                             <a href="cart.php" id="reselect" class="d-none" style="font-size: 14px;">Reselect </a>
-                            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
                             <script>
                             $(document).ready(function() {
@@ -269,12 +270,20 @@ if (isset($_POST["cartitems"])) { ?>
                                     var val = $(this).val();
 
                                     $('#dsct').text('-₱' + val);
+
+
                                     var total = $('#totalll').text();
+                                    $('#final_purchased').text('₱ ' + total);
 
                                     var fnaltotal = total - val;
 
+
                                     $('#totalll').text(fnaltotal);
                                     $('#final_total').text(fnaltotal);
+
+
+
+                                    $('#final_discount').text('₱ -' + val);
                                     $('#reselect').removeClass('d-none');
                                     $(this).addClass('d-none');
 
@@ -431,7 +440,7 @@ if (isset($_POST["cartitems"])) { ?>
                                             </span>
 
 
-                                            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                                         
 
 
                                             <!-- 
@@ -439,14 +448,31 @@ if (isset($_POST["cartitems"])) { ?>
                                                     id="delivery_fee">₱100</span></span> -->
                                             <br>
                                             <hr>
-                                            <span style="font-size: 15px; font-weight: bolder">TOTAL : <span
-                                                    class="float-right" id="totalamount"
-                                                    style="margin-left: 20px;font-size: 17px">₱ <?php if (
+                                            <span style="font-size: 15px; ">Total Purchased : <span class="float-right"
+                                                    id="discount" style="margin-left: 20px;font-size: 17px">
+                                                    <span id="final_purchased">
+
+                                                    </span>
+                                                </span>
+                                            </span>
+                                            <br> <br>
+                                            <span style="font-size: 15px; ">Discount : <span class="float-right"
+                                                    id="discount" style="margin-left: 20px;font-size: 17px">
+                                                    <span id="final_discount">
+
+                                                    </span>
+                                                </span>
+                                            </span>
+
+                                            <br> <br <span style="font-size: 15px; font-weight: bolder">TOTAL :
+                                            <span class="float-right" id="totalamount"
+                                                style="margin-left: 20px;font-size: 17px">₱ <?php if (
                                                         isset($totalamount)
                                                     ) { ?>
-                                                    <span id="final_total">
-                                                        <?php echo array_sum($totalamount); ?></span>
-                                                    <?php } else {echo "0";} ?></span></span>
+                                                <span id="final_total">
+                                                    <?php echo array_sum($totalamount); ?></span>
+                                                <?php } else {echo "0";} ?></span>
+                                        </span>
                                         </span>
 
 
@@ -499,8 +525,14 @@ if (isset($_POST["cartitems"])) { ?>
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php
+$sql  = mysqli_query($con, "SELECT *  from settings ");
+$arr_settings = mysqli_fetch_array($sql);
+$minOrder = $arr_settings['minTotalOrder'];
+?>
+
+
 
 <script>
 $(document).ready(function() {
@@ -534,8 +566,6 @@ $(document).ready(function() {
         $('#dfee').removeClass('d-none');
 
         var total = $('#totalll').text();
-
-
         var finaltotal = Number(total);
         $(this).addClass('d-none');
 
@@ -609,19 +639,19 @@ $(document).ready(function() {
                 })
             }
         })
-
-
-
-
-
-
     });
 
     $('#codbtn').click(function() {
 
-        var total = $('#totalll').text();
+        var total = $('#totalll').text().replace(/[^0-9.]/g, "");
+        var total_purchased = $('#final_purchased').text().replace(/[^0-9.]/g, "");
 
-        if (total > 10100) {
+        discount = ($('#final_discount').text()).replace(/[^0-9.]/g, "");
+
+        console.log(discount)
+
+
+        if (total > 100000) {
 
             Swal.fire(
                 'Limit Reached!',
@@ -634,6 +664,9 @@ $(document).ready(function() {
                 url: "transact.php",
                 method: "POST",
                 data: {
+                    total_purchased: total_purchased,
+                    discount: discount,
+                    total: total,
                     payment: 1,
                     flexRadioDefault: 'cod',
                     pm: 'cod'
@@ -650,15 +683,15 @@ $(document).ready(function() {
       if ($counts >= 1) {
           while ($row = mysqli_fetch_array($chckingorder)) {
               $porder = $row["tid"];
-          } ?>
+               } ?>
                     window.location.href = 'orders.php?p=<?php echo $porder; ?>';
                     <?php
-      } else {
+              } else {
            ?>
                     window.location.href = 'orders.php';
                     <?php
-      }
-      ?>
+                         }
+              ?>
 
 
 
@@ -677,51 +710,69 @@ $(document).ready(function() {
     })
 
     $('#proceedwmethod').on('submit', function(event) {
+
         event.preventDefault();
+        $('#final_purchased').text('₱ ' + <?php echo array_sum($totalamount); ?>);
 
-        $('#proceed').html(
-            '<div class="spinner-grow text-light " role="status"><span class="visually-hidden"></span></div><div class="spinner-grow text-light" role="status"><span class="visually-hidden"></span></div><div class="spinner-grow text-light" role="status"><span class="visually-hidden"></span></div>'
-        );
-        $.ajax({
-            url: "transact.php",
-            method: "POST",
-            data: $(this).serialize(),
-            success: function(data) {
+        var total = $('#final_purchased').text().replace(/[^0-9.]/g, "");
+        min_order = <?php echo $minOrder?>;
 
-                $('#btnpmmodal').click();
+        if (total < min_order) {
+            Swal.fire(
+                'Insufficient Order',
+                'Minimum order is ₱ '+ min_order,
+                'warning'
+            )
 
-                $.ajax({
-                    url: "fetch/user_address.php",
-                    method: "POST",
-                    data: {
 
-                        userid: '<?php echo $_SESSION["user_id"];?>',
-                    },
-                    success: function(data) {
-                        $('#address_customer').html(data);
+        } else {
+
+
+            $('#proceed').html(
+                '<div class="spinner-grow text-light " role="status"><span class="visually-hidden"></span></div><div class="spinner-grow text-light" role="status"><span class="visually-hidden"></span></div><div class="spinner-grow text-light" role="status"><span class="visually-hidden"></span></div>'
+            );
+            $.ajax({
+                url: "transact.php",
+                method: "POST",
+                data: $(this).serialize(),
+                success: function(data) {
+
+                    $('#btnpmmodal').click();
+
+                    $.ajax({
+                        url: "fetch/user_address.php",
+                        method: "POST",
+                        data: {
+
+                            userid: '<?php echo $_SESSION["user_id"];?>',
+                        },
+                        success: function(data) {
+                            $('#address_customer').html(data);
+                        }
+                    });
+
+
+
+                    if (data == 'reserve') {
+
+                        $('#pm').val('reserve');
+                        $('#shipadd').addClass('d-none');
+                    } else if (data == 'deliver') {
+                        $('#shipadd').removeClass('d-none');
+                        $('#pm').val('deliver');
                     }
-                });
 
+                    /*  $('#proceed').html('Redirecting ..');
+                      setInterval(function(){
+                        window.location.href='successful.php';
+                      },2000);
 
+                      */
 
-                if (data == 'reserve') {
-
-                    $('#pm').val('reserve');
-                    $('#shipadd').addClass('d-none');
-                } else if (data == 'deliver') {
-                    $('#shipadd').removeClass('d-none');
-                    $('#pm').val('deliver');
                 }
+            })
 
-                /*  $('#proceed').html('Redirecting ..');
-                  setInterval(function(){
-                    window.location.href='successful.php';
-                  },2000);
-
-                  */
-
-            }
-        })
+        }
     });
 
     $('.remove').hover(function() {

@@ -1,37 +1,26 @@
 <?php 
-$errors = '';
-$myemail = 'mannafestfoodinc@gmail.com';//<-----Put Your email address here.
-if(empty($_POST['name'])  || 
-   empty($_POST['email']) || 
-   empty($_POST['message']))
-{
-    $errors .= "\n Error: all fields are required";
-}
+
+session_start();
+include('../connections/connect.php');
+
+date_default_timezone_set("Asia/Manila");
+$datenow = date("Y-m-d");
 
 $name = $_POST['name']; 
 $email_address = $_POST['email']; 
-$message = $_POST['message']; 
+$message = $_POST['feedback']; 
 
-if (!preg_match(
-"/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", 
-$email_address))
-{
-    $errors .= "\n Error: Invalid email address";
+$query = "INSERT INTO customer_feedback (name,email,feedback,date) 
+VALUES ('$name','$email_address','$message','$datenow')";
+$results = mysqli_query($con, $query);
+
+if ($results) {
+	header("Location: ../index.php");
+	$_SESSION['sent_contact']= "successful";
+
+} else {
+	echo "ERROR: Could not be able to execute $query. ".mysqli_error($con);
 }
 
-if( empty($errors))
-{
-	$to = $myemail; 
-	$email_subject = "Contact form submission: $name";
-	$email_body = "You have received a new message. ".
-	" Here are the details:\n Name: $name \n Email: $email_address \n Message \n $message"; 
-	
-	$headers = "From: $myemail\n"; 
-	$headers .= "Reply-To: $email_address";
-	
-	mail($to,$email_subject,$email_body,$headers);
-	//redirect to the 'thank you' page
-    $_SESSION['sent_contact']= "successful";
-	header('Location: ../index.php');
-} 
+
 ?>

@@ -2,10 +2,18 @@
 // Initialize sessions
 session_start();
 // Database connection varibles. Change them to reflect your own.
+// $db_host = 'localhost';
+// $db_name = 'mannafest_db';
+// $db_user = 'root';
+// $db_pass = '';
+
+
 $db_host = 'localhost';
-$db_name = 'mannafest_db';
-$db_user = 'root';
-$db_pass = '';
+$db_name = 'u607598273_mannafest_db';
+$db_user = 'u607598273_root';
+$db_pass = 'zO4#xw/p';
+
+
 try {
     // Attempt to connect to our MySQL database
 	$pdo = new PDO('mysql:host=localhost;dbname=' . $db_name . ';charset=utf8', $db_user, $db_pass);

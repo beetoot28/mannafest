@@ -10,8 +10,6 @@ if (!isset($_SESSION["admin_id"])) {
 <?php
 include "head.php";
 include "../connections/connect.php";
-include "modal/production_modal.php";
-
 // expense category
 $sql = "SELECT * FROM product";
 $result = mysqli_query($con, $sql);
@@ -23,22 +21,14 @@ $prod_list .= '
 <option value="'.$arr["prod_id"].'">'.$arr["name"].'</option>';
 }
 
+date_default_timezone_set("Asia/Manila");
 
-
-$sql = mysqli_query($con, "SELECT  COUNT(*) from production_log  "); 
-$withdrawal = mysqli_fetch_array($sql);
-
-$generate= sprintf("%'03d", $withdrawal[0]+1);
-$today = date("Y");
-$code = 'P'.$today . $generate;
 
 
 
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-
-
+<link rel='stylesheet' href='css/dataTables.dateTime.min.css'>
 <style>
 .badge {
     /* Set the background color and border */
@@ -98,6 +88,9 @@ $code = 'P'.$today . $generate;
                                 data-bs-target="#newProduction" data-backdrop="static" data-keyboard="false"
                                 style="font-size: 14px;">Add new <i class="fas fa-plus-circle"></i></button>
 
+                            <button class="btn btn-danger text-white mb-2" data-bs-toggle="modal"
+                                data-bs-target="#expiredModal" data-backdrop="static" data-keyboard="false"
+                                style="font-size: 14px;">Expired Items </button>
 
                             <div class="table-responsive">
                                 <?php $results  = mysqli_query($con, " SELECT * FROM `product` 
@@ -146,12 +139,11 @@ $code = 'P'.$today . $generate;
                                             </td>
 
                                             <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button"
-                                                        class="btn btn-success btn-sm text-light btnView"
-                                                        style="font-size: 12px"><i class="fas fa-eye"></i></button>
 
-                                                </div>
+                                                <button type="button"
+                                                    class="btn btn-success btn-sm text-light btnViewProd"
+                                                    style="font-size: 12px"><i class="fas fa-eye"></i></button>
+
 
                                             </td>
                                         </tr>
@@ -175,98 +167,102 @@ $code = 'P'.$today . $generate;
         </section>
 
     </div>
+
+    <script src="https://unpkg.com/jquery-tabledit@1.0.0/jquery.tabledit.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
+    <!--Bootstrap Plugins-->
+
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/popper.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js"></script>
+    <script type="text/javascript" src="js/dataTables.dateTime.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+
 </body>
 
+<?php 
+include "modal/production_modal.php";
 
-
-<div class="modal fade" id="newProduction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="btn-close" style="float: right;" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <h5 class="modal-title">Add Daily Production</h5>
-
-            </div>
-            <div class="modal-body">
-                <form method='POST' action='functions/addProduction.php'>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Production Code</label>
-                            <input type="text" class="form-control" name="prod_code" value='<?php echo $code ?>'
-                                aria-describedby="amount" readonly>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-12">
-                        <div class="mb-3">
-                            <label for="product_name" class="form-label">Product List</label>
-                            <select class='form-select category' name='prod_id' id='prod_select' required>
-                                <option disabled="disabled" selected="selected" value=''>Select Product </option>
-                                <?php echo $prod_list?>
-
-                                <!--PHP echo-->
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Quantity</label>
-                            <input type="text" class="form-control" name="quantity" aria-describedby="amount" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="amount" class="form-label">Cost</label>
-                                <input type="text" class="form-control" name="cost" id="cost" aria-describedby="amount"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="amount" class="form-label">Price</label>
-                                <input type="text" class="form-control" name="price" id="price"
-                                    aria-describedby="amount" required>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="amount" class="form-label">Production Date</label>
-                                <input type="date" class="form-control" name="prod_date" aria-describedby="amount"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="amount" class="form-label">Expiration Date</label>
-                                <input type="date" class="form-control" name="exp_date" aria-describedby="amount"
-                                    required>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" name='add' class="btn btn-warning">Add</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
+?>
 
 </html>
+<script>
+var minDate, maxDate;
 
+// Custom filtering function which will search data in column four between two values
+$.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+        var min = minDate.val();
+        var max = maxDate.val();
+        var date = new Date(data[4]);
+
+        if (
+            (min === null && max === null) ||
+            (min === null && date <= max) ||
+            (min <= date && max === null) ||
+            (min <= date && date <= max)
+        ) {
+            return true;
+        }
+        return false;
+    }
+);
+
+
+minDate = new DateTime($('#date_min'), {
+    format: "YYYY-MM-DD"
+});
+maxDate = new DateTime($('#date_max'), {
+    format: "YYYY-MM-DD"
+});
+
+
+
+
+
+expired_table_list = $('#expired_table_list').DataTable({
+    dom: 'Bfrtip',
+    buttons: [{
+            extend: 'excel',
+            title: 'List of Expired Products'
+        },
+        {
+            extend: 'pdf',
+            title: 'List of Expired Products'
+        },
+        {
+            extend: 'print',
+            title: 'List of Expired Products'
+        },
+    ],
+
+});
+
+$('#date_min, #date_max').on('change', function() {
+    expired_table_list.draw();
+});
+</script>
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#production_table').DataTable();
+    const options = {
+        timeZone: 'Asia/Manila'
+    };
+
+
+
+
+
+
+    $('#production_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'excel', 'pdf', 'print'
+        ],
+    });
+
 
     var max_fields = 10;
     var wrapper = $(".input_fields_wrap");
@@ -295,18 +291,12 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="../js/sidebar.js?v=1"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="../js/datatable/datatables.js"></script>
-<link rel="stylesheet" type="text/css" href="../js/datatable/datatables.css">
-<!--Bootstrap Plugins-->
-<script type="text/javascript" src="../js/notify.js"></script>
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/popper.js"></script>
-<script type="text/javascript" src="../js/bootstrap.js"></script>
-
 <script type="text/javascript">
 $(document).ready(function() {
+
+
+
+
 
     $('#addphotos').on('submit', function(event) {
         event.preventDefault();
@@ -359,8 +349,8 @@ $(document).ready(function() {
 
     }
 
-    $('#production_table').on('click', '.btnView', function() {
-
+    $('#production_table').on('click', '.btnViewProd', function() {
+        console.log('hello')
 
         $tr = $(this).closest('tr');
 
@@ -389,6 +379,13 @@ $(document).ready(function() {
         }
         fetch_table();
     });
+
+    // $('.btnViewProd').on('click', function() {
+    //     console.log('hello')
+
+
+    // });
+
 
     $("#prod_select").on("change", function() {
         var prod_id = $(this).val();
@@ -422,4 +419,36 @@ $(document).ready(function() {
 
 
 });
+</script>
+
+<script>
+// var current_date = new Date();
+
+// // Set the time of day to run the code (e.g. midnight)
+// var run_time = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), 0, 0, 0);
+
+// // Check if it is after the specified time of day
+// if (current_date > run_time) {
+//     // Run the code
+//     console.log('first code run');
+
+//     $.ajax({
+//         type: "POST",
+//         url: "fetch/check_expiration.php",
+
+//         success: function(data) {
+//             console.log(data)
+//         }
+//     });
+//     // Set the flag to prevent the code from running again
+//     var code_ran = true;
+// }
+
+// // Check if the code has already run
+// if (!code_ran) {
+//     // Run the code
+//     console.log('first code again');
+//     // Set the flag to prevent the code from running again
+//     var code_ran = true;
+// }
 </script>

@@ -113,20 +113,15 @@
                     aria-label="Close"></button>
 
                 <br>
-                <form method="post" action="functions/addProduct.php" id="savenew" enctype="multipart/form-data">
-
-                    <input type="hidden" name="savenew">
-
-
-
-
+                <form method="post" action="functions/addProduct.php"  enctype="multipart/form-data">
+                <input type="hidden" name="prod_id" id='prod_id_update'>
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-5">
-                                <label style="font-size: 14px" class="mb-3">Multiple Photo Selection </label>
-                                <input type="file" name="image[]" onchange="javascript:updateList()" id="file"
-                                    style="font-size: 14px" class="form-control" accept="image/*" multiple="">
-                                <span style="font-size: 14px" id="imgsa"> Max of 3 Images will be accepted <span
+                        <div class="col-md-4">
+                                <label style="font-size: 14px" class="mb-3"> Photo Selection </label>
+                                <input type="file" name="image" onchange="javascript:updateListUpdate()" id="fileUpdate"
+                                    style="font-size: 14px" class="form-control" accept="image/*" >
+                                <span style="font-size: 14px" id="imgsa">Insert Image <span
                                         class="text-danger">*</span></span>
                                 <hr>
                                 <style type="text/css">
@@ -137,7 +132,7 @@
                                 </style>
                                 <h6 style="font-size: 14px">Selected Photos</h6>
 
-                                <div id="fileList"
+                                <div id="fileListUpdate"
                                     style="height: 240px;overflow-y: scroll;border-bottom:1px solid #b2c1c2;border-top:1px solid #b2c1c2">
                                 </div>
 
@@ -154,7 +149,8 @@
                                 <input type="text" name="name" style="font-size: 14px" id='edit_name'
                                     class="form-control mb-2" required="">
                                 <label style="font-size: 14px" class="mb-1">Select Category: </label>
-                                <select class="form-select mb-2" name="cat" id='edit_cat' style="font-size: 14px">
+
+                                <select class="form-select mb-2" name="cat" id='edit_cat' style="font-size: 14px" required>
                                     <option disabled="disabled" selected="selected" value="">Select Category </option>
                                     <?php echo $category?>
                                 </select>
@@ -183,7 +179,7 @@
                     </div>
                     <br>
 
-                    <button type="submit" id="disabledsave" name='savenew' class="btn btn-warning text-dark"
+                    <button type="submit" name='updateproduct' class="btn btn-warning text-dark"
                         style="font-size: 15px;float: right;">Save</button>
 
                 </form>

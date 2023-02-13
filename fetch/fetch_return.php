@@ -79,71 +79,92 @@
 <?php  
   session_start();
 include '../connections/connect.php';
+$output = '';
 
- $output = '';  
- $trans_id = (string)$_POST['trans_id'];
+$trans_id = (string)$_POST['trans_id'];
  
- 
- $sql  = "SELECT *,trans_record.price as trans_price from trans_record
- LEFT JOIN product ON trans_record.prod_id =  product.prod_id
- LEFT JOIN photo ON product.prod_id =  photo.prod_id
- WHERE transaction_id='$trans_id'  "; 
- 
- 
- 
-  $result = mysqli_query($con, $sql);  
-  $output .= '  
-             <table class="table">
-             <thead class="table-warning">
-                 <tr>
-                  
-                     <th> Img </th>
-        
-                     <th>Bardcode</th>
-                     <th>Product Name</th>
-                     <th> Price </th>
-                     <th> Qty</th>
-                     <th>Total Amount</th>
-                     <th>Select Product</th>
-                 </tr>
-             </thead>';  
-  if(mysqli_num_rows($result) > 0)  
-  {  
-       while($arr = mysqli_fetch_array($result))  
-       {  
- 
- 
-            $output .= '  
-                 <tr>  
-                 <td>
-         
-                     <img src="img/products/'.$arr["photo"].'" alt=""
-                     class="card-img-top" style="width:70px;height: 70px">
+$sql  = "SELECT *,trans_record.price as trans_price
+from transaction
+LEFT JOIN trans_record on transaction.tid = trans_record.transaction_id
+LEFT JOIN product ON trans_record.prod_id =  product.prod_id
+LEFT JOIN photo ON product.prod_id =  photo.prod_id
+WHERE transaction_id='$trans_id' "; 
+
+
+
+ $result = mysqli_query($con, $sql);  
+ $output .= '  
+            <table class="table" id="select_prod_return" style="font-size: 10px !important">
+            <thead class="table-warning"  style="font-size: 10px !important">
+                <tr >
+                 
+                    <th> Img </th>
+       
+                    <th>Bardcode</th>
+                    <th>Product Name</th>
+                    <th> Price </th>
                    
-                     </td>
-                     <td scope="row" hidden>'.$arr["transaction_id"].'</td>
-                     <td scope="row">'.$arr["barcode"].'</td>
-                     <td scope="row">'.$arr["name"].'</td>
-                     <td scope="row">₱ '.number_format($arr["trans_price"],2).'</td>
+                    <th>Total Amount</th>
+                    <th>Ordered Quantity</th>
+                    <th> Return Qty</th>
+                    <th>Select Product</th>
+                </tr>
+            </thead>';  
+ if(mysqli_num_rows($result) > 0)  
+ {  
+      while($arr = mysqli_fetch_array($result))  
+      {
+
+      $qty=  $arr["quantity"];
+           $output .= '  
+                <tr>  
+                <td>
+        
+                    <img src="img/products/'.$arr["photo"].'" alt=""
+                    class="card-img-top" style="width:70px;height: 70px">
                   
-                     <td scope="row">'.$arr["quantity"].'</td>
-              
-                     <td scope="row">₱ '.number_format($arr["total"],2).'</td>
-                     <td><input type="checkbox" name="product_select[]" value="'.$arr["prod_id"].'"> <label for="'.$arr["prod_id"].'"></label></td>
-                     </tr>
- ';
+                    </td>
+                    <td scope="row" hidden>'.$arr["transaction_id"].'</td>
+                    <td scope="row">'.$arr["barcode"].'</td>
+                    <td scope="row">'.$arr["name"].'</td>
+                    <td scope="row">₱ '.number_format($arr["trans_price"],2).'</td>
+
+                    <td scope="row">₱ '.number_format($arr["total"],2).' </td>
+                    <td scope="row">'.number_format($arr["quantity"]).'</td>
+                    <td scope="row">
+                    <input  class="form-control" id="qty" name="qty[]" value="'.$arr["quantity"].'" onkeyup="checkQty(this.value,'.$qty.')"/>
+                    
+                    
+                    </td>
+                    <td><input type="checkbox" id="select_prod_check" name="product_select[]" value="'.$arr["prod_id"].'"> <label for="'.$arr["prod_id"].'"></label></td>
+                    </tr>
+';
+}
+
+}
+else
+{
+$output .= '<tr>
+    <td colspan="4">Nothings in the cart</td>
+</tr>';
+}
+$output .= '</table>
+
+
+</div>';
+echo $output;
+?>
+
+
+<script>
+ function checkQty(qty,order_qty) {
+   document.getElementById("select_prod_check").checked = true;
+   if (qty > order_qty) {
+     alert("Quantity cannot be greater than current quantity.");
+     document.getElementById("qty").value = order_qty;
+     return false;
+   }
+   return true;
+   console.log(qty);
  }
- 
- }
- else
- {
- $output .= '<tr>
-     <td colspan="4">Nothings in the cart</td>
- </tr>';
- }
- $output .= '</table>
- 
- 
- </div>';
- echo $output;
- ?>
+</script>

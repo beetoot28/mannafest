@@ -1,6 +1,4 @@
 <style>
-
-
 th {
     font-size: 14px;
 }
@@ -11,7 +9,7 @@ include '../../connections/connect.php';
  $prod_id = (string)$_POST['prod_id'];
 
 
-$sql  = "SELECT * from production_log
+$sql  = "SELECT *,production_log.cost as prod_cost,production_log.price as prod_price  from production_log
 LEFT JOIN product on production_log.prod_id = product.prod_id
 WHERE production_log.prod_id='$prod_id' ORDER BY log_id DESC"; 
 $output='';
@@ -19,7 +17,7 @@ $output='';
 
  $result = mysqli_query($con, $sql);  
  $output .= '  
-            <table id="s_record_table" class="table" style="width:100%">
+            <table id="prods_record_table" class="table" style="width:100%">
             <thead class="table-dark">
                 <tr >
                     <th>Production Code</th>
@@ -59,8 +57,8 @@ $output='';
                 <td><div class="badge_1">'.$arr['qty_remaining'].'</div></td>
                 <td>'.$arr['prod_date'].'</td>
                 <td>'.$arr['exp_date'].'</td>
-               <td scope="row" >₱ '.number_format($arr["cost"],2).'</td>
-               <td scope="row" >₱ '.number_format($arr["price"],2).'</td>
+               <td scope="row" >₱ '.number_format($arr["prod_cost"],2).'</td>
+               <td scope="row" >₱ '.number_format($arr["prod_price"],2).'</td>
                 <td><span class="badge bg-'.$color.' text-white">'.$arr["status"].'</span></td>
                 </tr>  
            ';  
@@ -81,3 +79,34 @@ $output='';
       </div>';  
  echo $output;  
  ?>
+
+<script>
+$('#prods_record_table').DataTable({
+    dom: 'Bfrtip',
+    order: [[0, 'desc']],
+    buttons: [
+        'excel', 'pdf', 'print'
+    ],
+});
+
+$(document).ready(function() {
+            $('#prods_record_table').Tabledit({
+                deleteButton: false,
+                editButton: false,
+                columns: {
+                    identifier: [0, 'production_code'],
+                    editable: [
+                        [4, 'prod_date'],
+                        [5, 'exp_date'],
+                     
+
+                    ]
+                },
+
+                url: 'functions/live_edit_stockin.php'
+            });
+        });
+
+</script>
+
+

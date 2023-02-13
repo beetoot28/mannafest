@@ -1,4 +1,5 @@
 <?php 
+
 include '../connections/connect.php';
 
 
@@ -23,7 +24,7 @@ if(isset($_POST['category'])){
         <tbody>
             <?php
 
-			$gettabledata = "SELECT * FROM `accounts`  ";
+			$gettabledata = "SELECT * FROM `accounts` where user_type ='client' or user_type ='courier'   ";
 	                $gettingcategories = mysqli_query($con,$gettabledata); 
 	                $cat_count= mysqli_num_rows($gettingcategories);
 	               //  $get_id =  mysqli_insert_id($con); 

@@ -1,12 +1,12 @@
 <?php $results  = mysqli_query($con, " SELECT *,transaction.status as stat FROM `transaction`
     LEFT JOIN accounts ON transaction.user_id = accounts.user_id WHERE transaction.status='completed'"); ?>
-<table id="production_table" class="table table-hover" style="width:100%;">
+<table id="completed_table" class="table table-hover" style="width:100%;">
     <thead class="table-warning">
         <tr style='font-size:14px'>
             <th>Order Code</th>
             <th>Date</th>
             <th>Customer</th>
-            <th>Total Price</th>
+            <th>Total </th>
             <th>Status</th>
          
 
@@ -24,9 +24,9 @@
             <td>MN_<?php echo $row['tid']; ?></td>
             <td><?php echo $row['datecreated']; ?></td>
             <td><?php echo $row['name'].' '.$row['lastname']; ?></td>
-            <td>₱ <?php echo $gtrans['total_pay']; ?></td>
+            <td>₱ <?php echo number_format($row['total_amount'],2); ?></td>
             <td>
-               <i class="fa-solid fa-check"></i> Status :   <b>Completed </b>
+               <i class="fa-solid fa-check"></i> Status :    <b style='color:green'>Completed </b>
             </td>
 
            

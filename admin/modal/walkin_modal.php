@@ -74,11 +74,12 @@
 
                     <div class="row">
                         <div class="col">
-
+                        <input type="text" class="form-control" name='transaction_id' id='c_walkin_id' hidden
+                                    style='font-size:20px;font-weight:bold' >
 
                             <div class="mb-3">
                                 <label for="supplier" class="form-label">Customer Name : (optional) </label>
-                                <input type="text" class="form-control" name='customer' id='customer'
+                                <input type="text" class="form-control" name='customer' id='customer' value='Walk-in'
                                     style='font-size:20px;font-weight:bold'>
 
                                 </select>
@@ -87,7 +88,7 @@
                         <div class="col">
                             <div class="mb-3">
                                 <label for="supplier" class="form-label">Walkin ID. </label>
-                                <input type="text" class="form-control" name='transaction_id' id='c_walkin_id' readonly
+                                <input type="text" class="form-control" name='trans_code' value='<?php echo $trans_code ?>' readonly
                                     style='font-size:20px;font-weight:bold' required>
 
                                 </select>

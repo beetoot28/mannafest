@@ -83,9 +83,8 @@
 $(function() {
     $("#r_cash_remit").keyup(function() {
 
-        cash_onhand = $('#r_cash_onhand').val().replace(/[^0-9]/g, "");
-        cash_remit = $('#r_cash_remit').val().replace(/[^0-9]/g, "");
-
+        cash_onhand = $('#r_cash_onhand').val().replace(/[^0-9.]/g, "");
+        cash_remit = $('#r_cash_remit').val().replace(/[^0-9.]/g, "");
 
         remaining = parseFloat(+cash_onhand) - (parseFloat(+cash_remit))
 

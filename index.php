@@ -5,7 +5,6 @@ include 'connections/connect.php';
   /////////////////////////////SET ONLY IF USER ACCOUNT ID IS NOT SET //////////////////////////////////////
 if(isset($_SESSION['user_isset'])){
 
- 
 
 }else {
  
@@ -129,8 +128,6 @@ if (!isset($_SESSION['ran_traffic_script'])) {
   include 'include/allcategorynav.php';
 
   ?>
-
-
     <div class="intro">
         <div class="row">
             <div class="col-sm-6">
@@ -207,16 +204,16 @@ if (!isset($_SESSION['ran_traffic_script'])) {
                 </div>
             </div>
 
-            <div class="row mt-5">
-                <div class="" style="float: right;">
-
-                    <button onclick="window.location.href='category.php' " class="btn btn-dark"
-                        style="font-size: 13px;width: auto;float: right;">View All Products <i
+            <br> <br>
+            <center>
+            <button onclick="window.location.href='category.php' " class="btn btn-dark"
+                        style="font-size: 18px;width: auto">View All Products <i
                             class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-            <br> <br><br>
+            </center>
+            <br> <br>
+            
+      
+           <br>
             <center>
                 <h3>Top Features</h3>
 
@@ -294,7 +291,7 @@ if (!isset($_SESSION['ran_traffic_script'])) {
 
 
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 
     <script type="text/javascript">
     if ($(window).width() <= 767) {
@@ -315,24 +312,9 @@ if (!isset($_SESSION['ran_traffic_script'])) {
 
 
 
-    function runOncePerIP() {
-        // Get the IP address of the user
-        var userIP = '<?php echo $_SERVER['REMOTE_ADDR']; ?>';
-        // localStorage.removeItem(userIP);
-        // Check if the function has already been run for this IP address
-        if (localStorage.getItem(userIP) === null) {
-            // Run the function
-            console.log('Running function for the first time for this IP address');
 
-            // Set a value in local storage to indicate that the function has been run
-            localStorage.setItem(userIP, '1');
-        } else {
-            console.log('Function has already been run for this IP address');
-        }
-    }
 
-    // Run the function
-    runOncePerIP();
+
 
 
     function items() {
@@ -447,7 +429,7 @@ if (!isset($_SESSION['ran_traffic_script'])) {
     Swal.fire({
         icon: 'success',
         title: 'Thank you!',
-        text: 'Thank you for submitting the form. We will contact you soon!',
+        text: 'Thank you for your feedback!',
     })
     </script>
     <?php 
@@ -455,3 +437,21 @@ if (!isset($_SESSION['ran_traffic_script'])) {
 		?>
 </div>
 <?php endif ?>
+
+
+<script>
+    user_id = <?php echo $_SESSION['user_id'];?>;
+    $.ajax({
+        type: "POST",
+        url: "fetch/auto_received.php",
+        data: {
+                user_id: user_id,
+         
+            },
+
+        success: function(data) {
+            console.log(data)
+        }
+    });
+
+</script>

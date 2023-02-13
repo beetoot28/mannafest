@@ -23,7 +23,7 @@
         <li>
             <a href='sales.php'>
                 <i class='fa-solid fa-cash-register'></i>
-                <span class="link_name">Sales</span>
+                <span class="link_name">Product Sales</span>
             </a>
         </li>
         <li>
@@ -107,7 +107,12 @@
 
 
         <hr style='color:white'>
-
+        <li>
+            <a href='return_request.php'>
+                <i class='fa-solid fa-undo'></i>
+                <span class="link_name">Returns</span>
+            </a>
+        </li>
         <li>
             <a href='walkin_record.php'>
                 <i class='fa-solid fa-cash-register'></i>
@@ -121,6 +126,15 @@
             </a>
         </li>
         <hr style='color:white'>
+
+        <li>
+            <a href='customer_feedback.php'>
+                <i class='fas fa-comment'></i>
+                <span class="link_name">Feedback</span>
+            </a>
+        </li>
+
+
         <li>
             <a type='button' data-bs-toggle="modal" data-bs-target="#settingsModal">
                 <i class='fa-solid fa-gear'></i>
@@ -145,7 +159,8 @@
         </li>
     </ul>
 </div>
-
+<?php 
+include "../connections/connect.php"; ?>
 <script>
 const activePage = window.location.pathname;
 const navLinks = document.querySelectorAll('.sidebar a').forEach(link => {
@@ -174,29 +189,66 @@ sidebarBtn.addEventListener("click", () => {
 
 
 <!-- Modal -->
+<?php
+$sql  = mysqli_query($con, "SELECT *  from settings ");
+$arr_settings = mysqli_fetch_array($sql);
+?>
+
 <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+
                 <h5 class="modal-title" id="exampleModalLongTitle">Settings</h5>
-                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" style="float: right;" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <label style="font-size: 14px" class="mb-1">Reciver Auto Received: </label>
-                <select class="form-select mb-2" name="cat" style="font-size: 14px">
-                    <option selected="selected" value="">1 Day Upon Delivery</option>
-                    <option value="">2 Days Upon Delivery</option>
-                    <option value="">3 Days Upon Delivery</option>
-                    <option value="">Immediately </option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+
+
+            <form action='functions/update_settings.php' method='POST'>
+                <div class="modal-body">
+                    <label style="font-size: 14px" class="mb-1">Reciver Auto Received: </label>
+                    <select class="form-select mb-2" name="autoReceived" style="font-size: 14px">
+                        <?php
+              
+                        // Get the selected value from the database
+                        $sql = "SELECT * FROM settings ";
+                        $result = $con->query($sql);
+                        $row = $result->fetch_assoc();
+                        $selected_value = $row["autoReceived"];
+
+                        
+                        // Create the options for the select element
+                        $options = array(1 => "1 Day Upon Delivery", 2 => "2 Days Upon Delivery", 3 => "3 Days Upon Delivery", 0 => "Immediately");
+                        foreach ($options as $value => $text) {
+                        if ($value == $selected_value) {
+                            echo "<option selected='selected' value='$value'>$text</option>";
+                        } else {
+                            echo "<option value='$value'>$text</option>";
+                        }
+
+                        }
+
+                        // Close the database connection
+       
+                    ?>
+                    </select>
+                    <hr>
+                    <div class="mb-3">
+                        <label for="barcode" class="form-label">Minimum Order</label>
+                        <input type="text" class="form-control" name='minOrder'
+                            value='<?php echo $arr_settings['minTotalOrder'] ?>'
+                            style='font-size:20px;border: 1;font-weight:bold;text-align:center'>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name='submit' class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
