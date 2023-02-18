@@ -133,7 +133,12 @@
                 <span class="link_name">Feedback</span>
             </a>
         </li>
-
+        <li>
+            <a href='product_reviews.php'>
+                <i class='fas fa-star'></i>
+                <span class="link_name">Product Reviews</span>
+            </a>
+        </li>
 
         <li>
             <a type='button' data-bs-toggle="modal" data-bs-target="#settingsModal">

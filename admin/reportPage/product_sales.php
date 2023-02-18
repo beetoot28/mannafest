@@ -5,13 +5,11 @@ td {
 }
 </style>
 
-<div class="row">
-    <div class="col-sm-8">
-        <center>
-            <h5 style="font-weight: bolder;">Product Trend</h5>
-        </center>
+<center>
+    <h5 style="font-weight: bolder;">Product Trend</h5>
+</center>
 
-        <?php
+<?php
 
         $retail = mysqli_query($con,"SELECT YEAR(date_ordered) AS year,MONTHNAME(date_ordered) AS month,name,
         MAX(CASE WHEN MONTHNAME(date_ordered) = 'January' THEN total END) AS JAN,
@@ -30,68 +28,76 @@ td {
         WHERE YEAR(date_ordered) = 2023 GROUP BY product.name");        
         ?>
 
-        <div class="table-responsive">
-            <table id="table-prod_trends" class="table display ">
-                <thead class="table-warning">
-                    <tr>
-                        <th>Product</th>
-                        <th>January</th>
-                        <th>Feb</th>
-                        <th>Mar</th>
-                        <th>Apr</th>
-                        <th>May</th>
-                        <th>Jun</th>
-                        <th>Jul</th>
-                        <th>Aug</th>
-                        <th>Sept</th>
-                        <th>Oct</th>
-                        <th>Nov</th>
-                        <th>Dec</th>
+<div class="table-responsive">
+    <table id="table-prod_trends" class="table display ">
+        <thead class="table-warning">
+            <tr>
+                <th>Product</th>
+                <th>January</th>
+                <th>Feb</th>
+                <th>Mar</th>
+                <th>Apr</th>
+                <th>May</th>
+                <th>Jun</th>
+                <th>Jul</th>
+                <th>Aug</th>
+                <th>Sept</th>
+                <th>Oct</th>
+                <th>Nov</th>
+                <th>Dec</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = mysqli_fetch_array($retail)) { ?>
-                    <tr>
-                        <td><?php echo $row['name']?></td>
-                        <td>₱<?php echo number_format((float)$row['JAN'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['FEB'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['MAR'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['APR'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['MAY'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['JUNE'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['JULY'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['AUG'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['SEP'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['OCT'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['NOV'], 2, '.', ',');?></td>
-                        <td>₱<?php echo number_format((float)$row['DECE'], 2, '.', ',');?></td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($row = mysqli_fetch_array($retail)) { ?>
+            <tr>
+                <td><?php echo $row['name']?></td>
+                <td>₱<?php echo number_format((float)$row['JAN'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['FEB'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['MAR'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['APR'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['MAY'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['JUNE'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['JULY'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['AUG'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['SEP'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['OCT'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['NOV'], 2, '.', ',');?></td>
+                <td>₱<?php echo number_format((float)$row['DECE'], 2, '.', ',');?></td>
 
 
 
-                    </tr>
-                    <?php } ?>
-                </tbody>
-                <tfoot>
+            </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
 
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tfoot>
-            </table>
-            <!-- end table -->
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tfoot>
+    </table>
+    <!-- end table -->
 
-        </div>
+</div>
+<hr>
+<div style="width:auto;height: 400px">
+    <canvas id="product_sales_bar"></canvas>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-8">
+
         <center>
             <h5 style="font-weight: bolder;">Production Record</h5>
         </center>
@@ -211,7 +217,7 @@ td {
     </div>
     <div class="col-sm-4">
         <center>
-        <br>
+            <br>
             <div class="row">
                 <div class="col-md-4">
                     <label><b>Filter: From </b></label>
@@ -225,12 +231,12 @@ td {
                 </div>
                 <div class="col-md-2">
                     <br>
-                    <button type="button" class="btn btn-success text-light filterTopProd" style='width:200px'><i
+                    <button type="button" class="btn btn-success text-light filterTopProd" style='width:120px'><i
                             class="fas fa-submit"></i> Filter </button>
 
                 </div>
             </div>
-         
+
             <hr>
             <h5 style="font-weight: bolder;">Top Selling Product</h5> <br>
         </center>
@@ -594,4 +600,85 @@ $('#production_table').on('click', '.btnViewProdDetails', function() {
     }
     fetch_table();
 });
+
+// get the table data
+</script>
+<?php
+  // First, get the data from the database and store it in an array
+  $data = array();
+  $retail = mysqli_query($con,"SELECT YEAR(date_ordered) AS year,MONTH(date_ordered) AS month,name,total
+        FROM trans_record LEFT JOIN product on trans_record.prod_id = product.prod_id
+        WHERE YEAR(date_ordered) = 2023 order by MONTH(date_ordered)");
+  while ($row = mysqli_fetch_array($retail)) {
+      $key = $row['name'] . '_' . $row['month'];
+      $data[$key] = $row['total'];
+  }    
+?>
+<script>
+var data = <?php echo json_encode($data); ?>;
+var months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var labels = months.slice(1, 13).map(function(month) {
+  return month;
+});
+
+var datasets = [];
+Object.keys(data).forEach(function(key, index) {
+    var parts = key.split('_');
+    var product = parts[0];
+    var month = parseInt(parts[1]);
+
+    if (!datasets.some(dataset => dataset.label === product)) {
+        var color = 'rgba(' + (index * 50 % 255) + ',' + (index * 100 % 255) + ',' + (index * 150 % 255) + ', 0.8)';
+        datasets.push({
+            label: product,
+            data: [],
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 1
+        });
+    }
+
+    var dataset = datasets.find(dataset => dataset.label === product);
+    dataset.data[month - 1] = data[key];
+});
+
+var config = {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: datasets
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '₱' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                    }
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Month'
+                }
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Sales by Month'
+            },
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        }
+    }
+};
+
+var myChart = new Chart(document.getElementById('product_sales_bar'), config);
 </script>

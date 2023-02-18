@@ -222,26 +222,7 @@ if(!isset($_SESSION['admin_id'])){
 
                     </div>
 
-                    <div class="col">
-                        <div class="card shadow border-dark">
-                            <div class="card-body">
-                                <a href="orders.php?tab=2" class="stretched-link"></a>
-                                <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
-                                    PREPARING ORDER<br> <span class="badge bg-warning text-dark">
-                                        <?php 
-                            $corders = " select * from transaction where status='ready'  ";
-                            $countord = mysqli_query($con,$corders); 
-                            $allorders= mysqli_num_rows($countord);
-                            echo $allorders;      
-                        ?> </span>
-                                </h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                    
 
                     <div class="col">
                         <div class="card shadow border-dark">
@@ -299,6 +280,25 @@ if(!isset($_SESSION['admin_id'])){
                              ?>
                                     </span>
                                 </h5>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card shadow border-dark">
+                            <div class="card-body">
+                                <a href="product_reviews.php" class="stretched-link"></a>
+                                <h5 style="font-weight: bolder;text-align: center;" class="text-dark">
+                                     PRODUCT REVIEWS<br> <span class="badge bg-warning text-dark">
+                                        <?php 
+                            $corders = " select * from review_table  ";
+                            $countord = mysqli_query($con,$corders); 
+                            $allorders= mysqli_num_rows($countord);
+                            echo $allorders;      
+                        ?> </span>
+                                </h5>
+
                             </div>
 
                         </div>

@@ -148,7 +148,7 @@
                 <?php } ?>
             </tbody>
             <tfoot>
-            <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -164,7 +164,9 @@
             </tfoot>
         </table>
         <!-- end INCOME CHART -->
-
+        <div style="width:auto;height: 400px">
+            <canvas id="summary_product_sales_bar"></canvas>
+        </div>
 
 
 
@@ -241,7 +243,82 @@
     </div>
 </div>
 
+<?php
+  // First, get the data from the database and store it in an array
+  $data = array();
+  $retail = mysqli_query($con,"SELECT YEAR(date_ordered) AS year,MONTH(date_ordered) AS month,name,total
+        FROM trans_record LEFT JOIN product on trans_record.prod_id = product.prod_id
+        WHERE YEAR(date_ordered) = 2023 order by MONTH(date_ordered)");
+  while ($row = mysqli_fetch_array($retail)) {
+      $key = $row['name'] . '_' . $row['month'];
+      $data[$key] = $row['total'];
+  }    
+?>
+<script>
+var data = <?php echo json_encode($data); ?>;
+var months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var labels = months.slice(1, 13).map(function(month) {
+  return month;
+});
 
+var datasets = [];
+Object.keys(data).forEach(function(key, index) {
+    var parts = key.split('_');
+    var product = parts[0];
+    var month = parseInt(parts[1]);
+
+    if (!datasets.some(dataset => dataset.label === product)) {
+        var color = 'rgba(' + (index * 50 % 255) + ',' + (index * 100 % 255) + ',' + (index * 150 % 255) + ', 0.8)';
+        datasets.push({
+            label: product,
+            data: [],
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 1
+        });
+    }
+
+    var dataset = datasets.find(dataset => dataset.label === product);
+    dataset.data[month - 1] = data[key];
+});
+
+
+var config = {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: datasets
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '₱' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                    }
+                }
+            },
+
+
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Sales by Month'
+            },
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        }
+    }
+};
+
+var myChart = new Chart(document.getElementById('summary_product_sales_bar'), config);
+</script>
 
 
 
